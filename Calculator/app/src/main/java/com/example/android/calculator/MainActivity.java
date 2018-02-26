@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static int INDEX = 0;
     private static MainActivity instances;
 
-    private Button bAddOperator, bAddOperand;
+    private ImageButton bAddOperator, bAddOperand,bCalculate;
     private EditText etOperand;
     private Spinner sOperator;
     private RelativeLayout rLayout;
@@ -38,28 +39,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
 
-        this.onCalculationList = new CustomTextView[7];
-
+        //CONNECT ATTRIBUT KE VIEW
         this.trashZone = findViewById(R.id.trash_zone);
+        this.bCalculate = findViewById(R.id.bCalculate);
         this.bAddOperator = findViewById(R.id.bAddOperator);
         this.bAddOperand = findViewById(R.id.bAddOperand);
         this.etOperand = findViewById(R.id.etOperand);
         this.sOperator = findViewById(R.id.sOperator);
         this.rLayout = findViewById(R.id.relativeLayout);
 
+        //ADAPTER SPINNER
         this.adapter = ArrayAdapter.createFromResource(this, R.array.operator, android.R.layout.simple_spinner_item);
         this.adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.sOperator.setAdapter(adapter);
 
+        //LISTENER
         this.bAddOperand.setOnClickListener(this);
         this.bAddOperator.setOnClickListener(this);
+        this.bCalculate.setOnClickListener(this);
 
+        //INISIALISASI ATTRIBUT
         instances = this;
+        this.onCalculationList = new CustomTextView[7];
     }
 
     @Override
     public void onClick(View view) {
-        Log.d("MainActivity", "clicked");
+//        Log.d("MainActivity", "clicked");
         if (view == bAddOperand) {
             if (!etOperand.getText().toString().equalsIgnoreCase("")) {
                 CustomTextView newTv = createOp(etOperand.getText().toString(), 0);
@@ -75,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             newTv.setIsOperator(true);
             newTv.setId(INDEX++);
             rLayout.addView(newTv);
+        }else if(view == bCalculate){
+            Log.d("CALCULATOR","CALCULATE ON CLICK");
         }
     }
 
@@ -93,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.lightBlue, null));
                 break;
             case 1:
-                tv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.lightYellow, null));
+                tv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.lightPurple, null));
                 break;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -172,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     currX += OPERATOR_WIDTH;
                 }
                 currX += 40;
-                Log.d("COORDINATE",i+" : "+currX);
+//                Log.d("COORDINATE",i+" : "+currX);
             }
             if(indeks % 2 == 0){
                 currX -= 20;

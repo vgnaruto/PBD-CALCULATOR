@@ -8,7 +8,8 @@
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/lightOrange">
 
         <Spinner
             android:id="@+id/sOperator"
@@ -19,14 +20,17 @@
             android:layout_marginBottom="10px"
             android:textAlignment="center">
         </Spinner>
-        <Button
+
+        <ImageButton
             android:id="@+id/bAddOperator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ADD"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/add_button"
+            android:background="@null"
+            android:scaleType="fitCenter"
             android:layout_toRightOf="@id/sOperator"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10px"/>
+            android:layout_marginBottom="10px" />
 
         <EditText
             android:id="@+id/etOperand"
@@ -39,15 +43,18 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10px"
             android:maxLength="10"/>
-        <Button
+        <ImageButton
             android:id="@+id/bAddOperand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/add_button"
+            android:background="@null"
+            android:scaleType="fitCenter"
             android:layout_toLeftOf="@id/trash_zone"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="50px"
             android:layout_marginBottom="10px"/>
+
         <ImageView
             android:id="@+id/trash_zone"
             android:layout_width="200px"
@@ -66,6 +73,16 @@
             android:text="DRAG HERE!"
             android:textAlignment="center"
             android:drawableBottom="@color/colorPrimaryDark"/>
+        <ImageButton
+            android:id="@+id/bCalculate"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20px"
+            android:layout_width="500px"
+            android:layout_height="100px"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/calculate"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
