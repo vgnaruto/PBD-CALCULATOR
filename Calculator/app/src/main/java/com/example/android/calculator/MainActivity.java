@@ -1,16 +1,15 @@
 package com.example.android.calculator;
 
 import android.content.res.Resources;
-import android.os.Build;
-import android.support.v4.content.res.ResourcesCompat;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,19 +19,19 @@ import android.widget.Spinner;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
     public static final int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
-    private final int OPERAND_WIDTH = 276;
+    private final int OPERAND_WIDTH = 246;
     private final int OPERATOR_WIDTH = 84;
     private static int INDEX = 0;
     private static MainActivity instances;
 
-    private ImageButton bAddOperator, bAddOperand,bCalculate;
+    private ImageButton bAddOperator, bAddOperand, bCalculate;
     private EditText etOperand;
     private Spinner sOperator;
     private RelativeLayout rLayout;
     private ArrayAdapter<CharSequence> adapter;
-    private CustomTextView[] onCalculationList;
+    private CustomImageView[] onCalculationList;
+    private int[] coordinatX;
     private ImageView trashZone;
-    private GestureDetector detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //INISIALISASI ATTRIBUT
         instances = this;
-        this.onCalculationList = new CustomTextView[7];
+        this.onCalculationList = new CustomImageView[9];
+        this.coordinatX = new int[9];
+        for (int i = 0; i < coordinatX.length; i++) {
+            coordinatX[i] = posisiX(i);
+        }
     }
 
     @Override
@@ -68,21 +71,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Log.d("MainActivity", "clicked");
         if (view == bAddOperand) {
             if (!etOperand.getText().toString().equalsIgnoreCase("")) {
-                CustomTextView newTv = createOp(etOperand.getText().toString(), 0);
+                CustomImageView newTv = createOp(etOperand.getText().toString(), 0);
                 newTv.setOnTouchListener(new CustomTouchListener());
-                newTv.setId(INDEX++);
-                newTv.setIsOperator(false);
                 rLayout.addView(newTv);
                 etOperand.setText("");
             }
         } else if (view == bAddOperator) {
-            CustomTextView newTv = createOp(sOperator.getSelectedItem().toString(), 1);
+            CustomImageView newTv = createOp(sOperator.getSelectedItem().toString(), 1);
             newTv.setOnTouchListener(new CustomTouchListener());
-            newTv.setIsOperator(true);
-            newTv.setId(INDEX++);
             rLayout.addView(newTv);
-        }else if(view == bCalculate){
-            Log.d("CALCULATOR","CALCULATE ON CLICK");
+        } else if (view == bCalculate) {
+            Log.d("CALCULATOR", "CALCULATE ON CLICK");
         }
     }
 
@@ -91,119 +90,170 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onTouchEvent(event);
     }
 
-    private CustomTextView createOp(String text, int id) {
+    private CustomImageView createOp(String text, int id) {
+        float x = 0;
+        float y = 0;
+        //BITMAP
+        Bitmap bitmap;
+        if (id == 0) {
+            bitmap = Bitmap.createBitmap(OPERAND_WIDTH, 100, Bitmap.Config.ARGB_8888);
+            x = 128;
+            y = 68;
+        } else {
+            bitmap = Bitmap.createBitmap(OPERATOR_WIDTH, 100, Bitmap.Config.ARGB_8888);
+            x = 42;
+            y = 80;
+        }
+        //CANVAS
+//        if(this.canvas == null){
+//            this.canvas = new Canvas(bitmap);
+//        }
+        Canvas canvas = new Canvas(bitmap);
+        //IMAGE VIEW
         final RelativeLayout.LayoutParams lParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final CustomTextView tv = new CustomTextView(this);
+        final CustomImageView tv = new CustomImageView(MainActivity.this);
         tv.setLayoutParams(lParams);
+        tv.setImageBitmap(bitmap);
+
+        tv.setId(INDEX++);
         tv.setText(text);
-        switch (id){
+
+        Paint paint = new Paint();
+        switch (id) {
             case 0:
-                tv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.lightBlue, null));
+                tv.setBackgroundColor(getResources().getColor(R.color.lightBlue));
+                paint.setTextSize(45f);
+                tv.setIsOperator(false);
                 break;
             case 1:
-                tv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.lightPurple, null));
+                tv.setBackgroundColor(getResources().getColor(R.color.lightPurple));
+                paint.setTextSize(100f);
+                tv.setIsOperator(true);
                 break;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        }
-        float tempX = (float)Math.random()*(WIDTH-400)+200;
-        float tempY = (float)(Math.random())*(HEIGHT - 600)+200;
-        tv.setX(tempX);
-        tv.setY(tempY);
-//        Log.d("xy",tempX+" "+tempY);
-        tv.setPadding(30,50,30,50);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setColor(getResources().getColor(R.color.black));
+        paint.setAntiAlias(true);
+        canvas.drawText(text, x, y, paint);
+        float randX = (float) Math.random() * (WIDTH - 400) + 200;
+        float randY = (float) (Math.random()) * (HEIGHT - 600) + 200;
+        tv.setX(randX);
+        tv.setY(randY);
+        tv.invalidate();
         return tv;
     }
+
     public static MainActivity getInstances() {
         return instances;
     }
-    public ImageView getTrashZone(){
+
+    public ImageView getTrashZone() {
         return this.trashZone;
     }
-    public CustomTextView[] getOnCalculationList(){
+
+    public CustomImageView[] getOnCalculationList() {
         return this.onCalculationList;
     }
 
-    public boolean contains(View v){
-        for(CustomTextView view : onCalculationList){
-            if(view == v){
+    public boolean contains(View v) {
+        for (CustomImageView view : onCalculationList) {
+            if (view == v) {
                 return true;
             }
         }
         return false;
     }
-    public void remove(View v){
-        for(int i=0;i<onCalculationList.length;i++){
-            if(v == onCalculationList[i]){
+
+    /**
+     * Membuang view dari array.
+     * */
+    public void remove(View v) {
+        for (int i = 0; i < onCalculationList.length; i++) {
+            if (v == onCalculationList[i]) {
                 onCalculationList[i] = null;
                 break;
             }
         }
     }
-    public boolean add(View v){
-        CustomTextView currView = (CustomTextView) v;
-        //view = operator
-        if(currView.getIsOperator()){
-            for(int i=1;i<onCalculationList.length;i+=2){
-                if(onCalculationList[i] == null){
-                    onCalculationList[i] = currView;
-                    setCoordinat(v,i);
-                    return true;
-                }
-            }
-        }
-        //view = operand
-        else{
-            for(int i=0;i<onCalculationList.length;i+=2){
-                if(onCalculationList[i] == null){
-                    onCalculationList[i] = currView;
-                    setCoordinat(v,i);
-                    return true;
-                }
-            }
-        }
-        return false;
+
+    /**
+     * Param 1 : View yang lagi ditekan
+     * Berguna untuk menambahkan view ke dalam array
+     * View yang masuk ke dalam array hanya view yang valid
+     * View yang valid maksudnya slot tempat view akan dimasukkan masih kosong
+     * */
+    public boolean add(CustomImageView v) {
+        onCalculationList[getIdxTerdekat(v)] = v;
+        setPosition(v);
+        return true;
     }
-    private void setCoordinat(View v, int indeks){
-        int currX = 30;
-        if(indeks == 0){
-            v.setX(currX);
-        }else{
-            for(int i=0;i<indeks;i++){
+
+    /**
+     * Param 1 : View yang lagi ditekan
+     * Berguna untuk meletakan view ke dalam slot terdekatnya.
+     */
+    private void setPosition(CustomImageView v) {
+        int idx = getIdxTerdekat(v);
+        v.setX(coordinatX[idx]);
+        v.setY(100);
+    }
+
+    /**
+     * Dipanggil 1x saja
+     * Digunakan untuk mengisi nilai array coordinatX saja
+     * */
+    private int posisiX(int indeks) {
+        int currX = 110;
+        if (indeks == 0) {
+            return currX;
+        } else {
+            for (int i = 0; i < indeks; i++) {
                 //operand
-                if(i % 2 == 0){
-                    currX += OPERAND_WIDTH;
+                if (i % 2 == 0) {
+                    currX += OPERAND_WIDTH + 10;
                 }
                 //operator
-                else{
-                    currX += OPERATOR_WIDTH;
+                else {
+                    currX += OPERATOR_WIDTH + 10;
                 }
-                currX += 40;
-//                Log.d("COORDINATE",i+" : "+currX);
             }
-            if(indeks % 2 == 0){
-                currX -= 20;
-            }
-            v.setX(currX);
         }
-        v.setY(50);
+        return currX;
     }
-    public boolean isKosong(String value){
-        if(value.equalsIgnoreCase("OPERAND")){
-            for(int i=0;i<onCalculationList.length;i+=2){
-                if(onCalculationList[i] == null){
-                    return true;
+
+    /**
+     * param 1 : view yang lagi di tekan
+     * Akan mencari selisih terdekat dari array coordinatX dengan coordinat x view yang di tekan
+     * Kembalian berupa index coordinatX yang terdekat
+     * */
+    public int getIdxTerdekat(View v){
+        int min = Integer.MAX_VALUE;
+        int idx = -1;
+        if (!((CustomImageView)v).getIsOperator()) {
+            for (int i = 0; i < coordinatX.length; i += 2) {
+                int selisih = Math.abs((int)(v.getX() - coordinatX[i]));
+                if (min > selisih) {
+                    min = selisih;
+                    idx = i;
+                }
+            }
+        } else {
+            for (int i = 1; i < coordinatX.length; i += 2) {
+                int selisih = Math.abs((int)(v.getX() - coordinatX[i]));
+                if (min > selisih) {
+                    min = selisih;
+                    idx = i;
                 }
             }
         }
-        else if(value.equalsIgnoreCase("OPERATOR")){
-            for(int i=1;i<onCalculationList.length;i+=2){
-                if(onCalculationList[i] == null){
-                    return true;
-                }
-            }
-        }
-        return false;
+        return idx;
+    }
+
+    /**
+     * param 1: index yang akan di cek
+     * kalau onCalculationList dengan indeks ke idx == null, berarti kosong
+     * */
+    public boolean isKosong(int idx) {
+        return onCalculationList[idx] == null;
     }
 }

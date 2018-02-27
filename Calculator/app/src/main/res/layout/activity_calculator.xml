@@ -16,7 +16,7 @@
             android:layout_width="150px"
             android:layout_height="100px"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="150px"
+            android:layout_toLeftOf="@id/bAddOperator"
             android:layout_marginBottom="10px"
             android:textAlignment="center">
         </Spinner>
@@ -28,8 +28,9 @@
             android:src="@drawable/add_button"
             android:background="@null"
             android:scaleType="fitCenter"
-            android:layout_toRightOf="@id/sOperator"
+            android:layout_toLeftOf="@id/bCalculate"
             android:layout_alignParentBottom="true"
+            android:layout_marginRight="40dp"
             android:layout_marginBottom="10px" />
 
         <EditText
@@ -42,7 +43,8 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10px"
-            android:maxLength="10"/>
+            android:maxLength="8"/>
+
         <ImageButton
             android:id="@+id/bAddOperand"
             android:layout_width="40dp"
@@ -50,9 +52,9 @@
             android:src="@drawable/add_button"
             android:background="@null"
             android:scaleType="fitCenter"
-            android:layout_toLeftOf="@id/trash_zone"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="50px"
+            android:layout_toLeftOf="@id/trash_zone"
+            android:layout_marginRight="10px"
             android:layout_marginBottom="10px"/>
 
         <ImageView
@@ -64,15 +66,13 @@
             android:src="@drawable/trash_final"/>
 
         <TextView
+            android:id="@+id/dragTv"
             android:layout_width="match_parent"
             android:layout_height="250px"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:background="@drawable/border"
             android:text="DRAG HERE!"
-            android:textAlignment="center"
-            android:drawableBottom="@color/colorPrimaryDark"/>
+            android:textAlignment="center"/>
+
         <ImageButton
             android:id="@+id/bCalculate"
             android:layout_centerHorizontal="true"

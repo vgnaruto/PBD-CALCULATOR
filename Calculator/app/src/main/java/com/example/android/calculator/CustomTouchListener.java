@@ -17,49 +17,35 @@ public class CustomTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_UP:
                 //kalau di area atas
                 if (view.getY() <= 250) {
-                    CustomTextView currentView = (CustomTextView) view;
-                    //view = operator (+,-,x,/)
-                    if (currentView.getIsOperator()) {
-                        //kalau view udah ada di array
-                        if (MainActivity.getInstances().contains(view)) {
+                    //kalau view sudah ada di slot
+                    if (MainActivity.getInstances().contains(view)) {
+                        int idx = MainActivity.getInstances().getIdxTerdekat(view);
+                        //kalau slot baru masih kosong
+                        if(MainActivity.getInstances().isKosong(idx)){
                             MainActivity.getInstances().remove(view);
-                            MainActivity.getInstances().add(view);
+                            MainActivity.getInstances().add((CustomImageView) view);
                         }
-                        //kalau view belum ada di array
-                        else {
-                            //kalau slot operator tidak kosong, view dipentalin
-                            if (!MainActivity.getInstances().isKosong("OPERATOR")) {
-                                float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
-                                float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
-                                view.setX(tempX);
-                                view.setY(tempY);
-                            }
-                            //kalau slot operator masih ada yang kosong.
-                            else {
-                                MainActivity.getInstances().add(view);
-                            }
+                        //kalau slot baru tidak kosong
+                        else{
+                            float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
+                            float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
+                            view.setX(tempX);
+                            view.setY(tempY);
+                            MainActivity.getInstances().remove(view);
                         }
                     }
-                    //view = operand(1,2,3...)
+                    //kalau view belum di slot
                     else {
-                        //kalau view udah ada di array
-                        if (MainActivity.getInstances().contains(view)) {
-                            MainActivity.getInstances().remove(view);
-                            MainActivity.getInstances().add(view);
+                        //kalau slot baru tidak kosong
+                        if (!MainActivity.getInstances().isKosong(MainActivity.getInstances().getIdxTerdekat(view))) {
+                            float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
+                            float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
+                            view.setX(tempX);
+                            view.setY(tempY);
                         }
-                        //kalau view belum ada di array
+                        //kalau slot baru kosong
                         else {
-                            //kalau slot operand tidak kosong, view dipentalin.
-                            if (!MainActivity.getInstances().isKosong("OPERAND")) {
-                                float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
-                                float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
-                                view.setX(tempX);
-                                view.setY(tempY);
-                            }
-                            //kalau view sebelumnya operator, di masukin ke sebelah viewnya.
-                            else {
-                                MainActivity.getInstances().add(view);
-                            }
+                            MainActivity.getInstances().add((CustomImageView) view);
                         }
                     }
                 }
@@ -73,6 +59,19 @@ public class CustomTouchListener implements View.OnTouchListener {
                     else {
                         //do nothing
                     }
+                }
+
+                if(view.getX() <= 0){
+                    view.setX(1);
+                }
+                if(view.getX()+view.getWidth() >= MainActivity.WIDTH){
+                    view.setX(MainActivity.WIDTH-view.getWidth()-1);
+                }
+                if(view.getY() <= 0){
+                    view.setY(1);
+                }
+                if(view.getY()+view.getHeight() >= MainActivity.HEIGHT){
+                    view.setY(MainActivity.HEIGHT-view.getHeight()-1);
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -90,8 +89,23 @@ public class CustomTouchListener implements View.OnTouchListener {
                     ((ViewGroup) view.getParent()).removeView(view);
                 }
                 //JARI MENGGERAKAN VIEW DI BAGIAN TENGAH VIEW SEBAGAI TITIK PUSATNYA
-                view.setX(motionEvent.getRawX() - view.getWidth() / 2.0f);
-                view.setY(motionEvent.getRawY() - view.getHeight());
+                if(view.getX() > 0 && view.getX()+view.getWidth() < MainActivity.WIDTH && view.getY() > 0 && view.getY() < MainActivity.HEIGHT) {
+                    view.setX(motionEvent.getRawX() - view.getWidth() / 2.0f);
+                    view.setY(motionEvent.getRawY() - view.getHeight());
+                }else{
+                    if(view.getX() <= 0){
+                        view.setX(1);
+                    }
+                    if(view.getX()+view.getWidth() >= MainActivity.WIDTH){
+                        view.setX(MainActivity.WIDTH-view.getWidth()-1);
+                    }
+                    if(view.getY() <= 0){
+                        view.setY(1);
+                    }
+                    if(view.getY()+view.getHeight() >= MainActivity.HEIGHT){
+                        view.setY(MainActivity.HEIGHT-view.getHeight()-1);
+                    }
+                }
                 break;
         }
         return true;

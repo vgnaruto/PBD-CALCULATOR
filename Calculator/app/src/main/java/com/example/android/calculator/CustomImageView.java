@@ -4,27 +4,26 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 /**
  * Created by toshiba pc on 2/25/2018.
  */
 
 @SuppressLint("AppCompatCustomView")
-public class CustomTextView extends TextView {
+public class CustomImageView extends ImageView {
     private int id;
     private boolean isOperator;
-    public CustomTextView(Context context) {
+    private String text;
+
+    public CustomImageView(Context context) {
         super(context);
     }
 
-    public CustomTextView(Context context, @Nullable AttributeSet attrs) {
+    public CustomImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CustomTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
     public void setIsOperator(boolean isIt){
         this.isOperator = isIt;
     }
@@ -36,5 +35,11 @@ public class CustomTextView extends TextView {
     }
     public int getId(){
         return this.id;
+    }
+    public void setText(String text){
+        this.text =text;
+    }
+    public String getText(){
+        return this.text;
     }
 }
