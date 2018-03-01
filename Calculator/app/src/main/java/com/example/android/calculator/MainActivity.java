@@ -1,5 +1,6 @@
 package com.example.android.calculator;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,10 +17,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -147,11 +147,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             ((ViewGroup) civ.getParent()).removeView(civ);
                         }
                     }
-                    CustomImageView newIV = this.createOp(String.format("%.2f",Double.parseDouble(hasil)),0);
+                    CustomImageView newIV = this.createOp((int)Double.parseDouble(hasil)+"",0);
                     newIV.setOnTouchListener(new CustomTouchListener());
                     rLayout.addView(newIV);
                 }else{
-                    Log.d("CALCULATE", "TIDAK VALID");
+                    Toast toast = Toast.makeText(getApplicationContext(),"Data tidak valid",Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
         }
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onTouchEvent(event);
     }
 
+    @SuppressLint("NewApi")
     private CustomImageView createOp(String text, int id) {
         float x = 0;
         float y = 0;
@@ -176,10 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             x = 42;
             y = 80;
         }
-        //CANVAS
-//        if(this.canvas == null){
-//            this.canvas = new Canvas(bitmap);
-//        }
+
         Canvas canvas = new Canvas(bitmap);
         //IMAGE VIEW
         final RelativeLayout.LayoutParams lParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -193,12 +192,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Paint paint = new Paint();
         switch (id) {
             case 0:
-                tv.setBackgroundColor(getResources().getColor(R.color.lightBlue));
+                tv.setBackground(getResources().getDrawable(R.drawable.operand_border));
                 paint.setTextSize(45f);
                 tv.setIsOperator(false);
                 break;
             case 1:
-                tv.setBackgroundColor(getResources().getColor(R.color.lightPurple));
+                tv.setBackground(getResources().getDrawable(R.drawable.operator_border));
                 paint.setTextSize(100f);
                 tv.setIsOperator(true);
                 break;
