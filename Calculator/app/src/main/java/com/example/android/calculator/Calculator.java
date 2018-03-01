@@ -15,15 +15,19 @@ public class Calculator {
         switch(operator){
             case "+":
                 //OPERASI JUMLAH
+                result = op1 + op2;
                 break;
             case "-":
                 //OPERASI KURANG
+                result = op1 - op2;
                 break;
             case "x":
                 //OPERASI KALI
+                result = op1 * op2;
                 break;
             case ":":
                 //OPERASI BAGI
+                result = op1 / op2;
                 break;
         }
         return result;

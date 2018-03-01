@@ -86,6 +86,9 @@ public class CustomTouchListener implements View.OnTouchListener {
                 if (view.getX() + (view.getWidth() / 2) > MainActivity.getInstances().getTrashZone().getX() && view.getX() + (view.getWidth() / 2) < (MainActivity.getInstances().getTrashZone().getX() + MainActivity.getInstances().getTrashZone().getWidth()) &&
                         view.getY() + (view.getHeight() / 2) > MainActivity.getInstances().getTrashZone().getY() && view.getY() + (view.getHeight() / 2) < (MainActivity.getInstances().getTrashZone().getY() + MainActivity.getInstances().getTrashZone().getHeight())) {
 //                    Log.d("CALCULATOR-TRASH_ZONE","MASUK");
+                    if (MainActivity.getInstances().contains(view)) {
+                        MainActivity.getInstances().remove(view);
+                    }
                     ((ViewGroup) view.getParent()).removeView(view);
                 }
                 //JARI MENGGERAKAN VIEW DI BAGIAN TENGAH VIEW SEBAGAI TITIK PUSATNYA

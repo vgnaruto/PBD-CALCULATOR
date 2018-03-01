@@ -9,12 +9,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -81,7 +86,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             newTv.setOnTouchListener(new CustomTouchListener());
             rLayout.addView(newTv);
         } else if (view == bCalculate) {
-            Log.d("CALCULATOR", "CALCULATE ON CLICK");
+            LinkedList<String> llOperand = new LinkedList<>();
+            LinkedList<String> llOperator = new LinkedList<>();
+            int jumlahOperand = 0;
+            int jumlahOperator = 0;
+            for(int i=0;i<onCalculationList.length;i++){
+                CustomImageView civ = onCalculationList[i];
+                if(i%2==0){
+                    if(civ == null){
+                        llOperand.add("NULL");
+                    }else{
+                        llOperand.add(civ.getText());
+                        jumlahOperand++;
+                    }
+                }else{
+                    if(civ == null){
+                        llOperator.add("NULL");
+                    }else{
+                        llOperator.add(civ.getText());
+                        jumlahOperator++;
+                    }
+                }
+            }
+            if(jumlahOperand - jumlahOperator != 1){
+                //tidak valid
+            }else{
+                String a1 = llOperand.removeFirst();
+                String a2 = "";
+                String op = "";
+                String hasil = "";
+                boolean isValid = true;
+                while(!llOperand.isEmpty()){
+                    a2 = llOperand.removeFirst();
+                    op = llOperator.removeFirst();
+                    if(a1.equalsIgnoreCase("NULL") || a2.equalsIgnoreCase("NULL") || op.equalsIgnoreCase("NULL")){
+                        break;
+                    }
+                    hasil = Calculator.calculate(a1,a2,op)+"";
+                    a1 = hasil;
+                    a2 = "";
+                    op = "";
+                }
+                while(!llOperand.isEmpty()){
+                    String s = llOperand.removeFirst();
+                    if(!s.equalsIgnoreCase("NULL")){
+                        isValid = false;
+                    }
+                }
+                while(!llOperator.isEmpty()){
+                    String s = llOperator.removeFirst();
+                    if(!s.equalsIgnoreCase("NULL")){
+                        isValid = false;
+                    }
+                }
+                if(isValid) {
+                    Log.d("CALCULATE", hasil);
+                    for(CustomImageView civ : onCalculationList){
+                        if(civ != null) {
+                            this.remove(civ);
+                            ((ViewGroup) civ.getParent()).removeView(civ);
+                        }
+                    }
+                    CustomImageView newIV = this.createOp(String.format("%.2f",Double.parseDouble(hasil)),0);
+                    newIV.setOnTouchListener(new CustomTouchListener());
+                    rLayout.addView(newIV);
+                }else{
+                    Log.d("CALCULATE", "TIDAK VALID");
+                }
+            }
         }
     }
 
@@ -166,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Membuang view dari array.
-     * */
+     */
     public void remove(View v) {
         for (int i = 0; i < onCalculationList.length; i++) {
             if (v == onCalculationList[i]) {
@@ -181,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Berguna untuk menambahkan view ke dalam array
      * View yang masuk ke dalam array hanya view yang valid
      * View yang valid maksudnya slot tempat view akan dimasukkan masih kosong
-     * */
+     */
     public boolean add(CustomImageView v) {
         onCalculationList[getIdxTerdekat(v)] = v;
         setPosition(v);
@@ -201,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Dipanggil 1x saja
      * Digunakan untuk mengisi nilai array coordinatX saja
-     * */
+     */
     private int posisiX(int indeks) {
         int currX = 110;
         if (indeks == 0) {
@@ -225,13 +297,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * param 1 : view yang lagi di tekan
      * Akan mencari selisih terdekat dari array coordinatX dengan coordinat x view yang di tekan
      * Kembalian berupa index coordinatX yang terdekat
-     * */
-    public int getIdxTerdekat(View v){
+     */
+    public int getIdxTerdekat(View v) {
         int min = Integer.MAX_VALUE;
         int idx = -1;
-        if (!((CustomImageView)v).getIsOperator()) {
+        if (!((CustomImageView) v).getIsOperator()) {
             for (int i = 0; i < coordinatX.length; i += 2) {
-                int selisih = Math.abs((int)(v.getX() - coordinatX[i]));
+                int selisih = Math.abs((int) (v.getX() - coordinatX[i]));
                 if (min > selisih) {
                     min = selisih;
                     idx = i;
@@ -239,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else {
             for (int i = 1; i < coordinatX.length; i += 2) {
-                int selisih = Math.abs((int)(v.getX() - coordinatX[i]));
+                int selisih = Math.abs((int) (v.getX() - coordinatX[i]));
                 if (min > selisih) {
                     min = selisih;
                     idx = i;
@@ -252,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * param 1: index yang akan di cek
      * kalau onCalculationList dengan indeks ke idx == null, berarti kosong
-     * */
+     */
     public boolean isKosong(int idx) {
         return onCalculationList[idx] == null;
     }
