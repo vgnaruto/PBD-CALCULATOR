@@ -10,11 +10,12 @@
         android:layout_width="150px"
         android:layout_height="100px"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50px"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="200px"
-        android:layout_marginRight="10dp"
-        android:textAlignment="center"></Spinner>
+        android:layout_marginBottom="65px"
+        android:layout_marginRight="20px"
+        android:textAlignment="center"
+        android:background="@drawable/border_umum"/>
 
     <ImageButton
         android:id="@+id/bAddOperator"
@@ -33,12 +34,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50px"
-        android:layout_marginRight="40px"
+        android:padding="30px"
+        android:layout_marginBottom="40px"
+        android:layout_marginRight="20px"
         android:layout_toLeftOf="@id/bAddOperand"
         android:hint="angka"
         android:inputType="number"
-        android:maxLength="8" />
+        android:maxLength="8"
+        android:background="@drawable/border_umum"/>
 
     <ImageButton
         android:id="@+id/bAddOperand"
