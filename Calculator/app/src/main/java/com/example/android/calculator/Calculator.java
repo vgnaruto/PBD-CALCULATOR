@@ -2,7 +2,10 @@ package com.example.android.calculator;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+
+import javax.xml.xpath.XPathExpression;
 
 /**
  * Kelas ini yang akan mengatur operasi matematika
@@ -12,11 +15,12 @@ import java.util.LinkedList;
 
 public class Calculator {
     public static double result = 0;
-    public static double calculate(String operand1, String operand2, String operator){
+
+    public static double calculate(String operand1, String operand2, String operator) {
         double op1 = Double.parseDouble(operand1);
         double op2 = Double.parseDouble(operand2);
         double result = 0;
-        switch(operator){
+        switch (operator) {
             case "+":
                 //OPERASI JUMLAH
                 result = op1 + op2;
@@ -25,58 +29,151 @@ public class Calculator {
                 //OPERASI KURANG
                 result = op1 - op2;
                 break;
-            case "x":
+            case "*":
                 //OPERASI KALI
                 result = op1 * op2;
                 break;
-            case ":":
+            case "/":
                 //OPERASI BAGI
                 result = op1 / op2;
                 break;
         }
         return result;
     }
-    public static boolean getAnswer(LinkedList<CustomImageView> ll){
+
+    public static boolean getAnswer(LinkedList<Node> ll) {
         result = 0;
         int jumlahOperator = 0;
         int jumlahOperand = 0;
-        String op1 = "",op2 = "",ot = "";
+        String op1 = "", op2 = "", ot = "";
         boolean bagianOperand = true;
-        while(!ll.isEmpty()){
-            CustomImageView civ = ll.removeFirst();
+        while (!ll.isEmpty()) {
+            Node n = ll.removeFirst();
 //            if(civ ==null){
 //                Log.d("CALCULATE","NULL");
 //            }else{
 //                Log.d("CALCULATE",civ.getText());
 //            }
-            if(civ != null){
-                if(!civ.getIsOperator() && bagianOperand){
-                    if(op1.equalsIgnoreCase("")){
-                        op1 = civ.getText();
-                    }else{
-                        op2 = civ.getText();
-                        op1 = ""+Calculator.calculate(op1,op2,ot);
+            if (n != null) {
+                if (!n.getIsOperator() && bagianOperand) {
+                    if (op1.equalsIgnoreCase("")) {
+                        op1 = n.getText();
+                    } else {
+                        op2 = n.getText();
+                        op1 = "" + Calculator.calculate(op1, op2, ot);
                         result = Double.parseDouble(op1);
                         op2 = "";
                         ot = "";
                     }
                     bagianOperand = false;
-                    jumlahOperand ++;
-                }else if(civ.getIsOperator() && !bagianOperand){
-                    ot = civ.getText();
+                    jumlahOperand++;
+                } else if (n.getIsOperator() && !bagianOperand) {
+                    ot = n.getText();
                     jumlahOperator++;
                     bagianOperand = true;
-                }else{
+                } else {
                     return false;
                 }
             }
         }
-        if(jumlahOperand == 1 && jumlahOperator == 0){
+        if (jumlahOperand == 1 && jumlahOperator == 0) {
             return false;
-        }else if(jumlahOperand - jumlahOperator != 1){
+        } else if (jumlahOperand - jumlahOperator != 1) {
             return false;
-        }else {
+        } else {
             return true;
         }
+    }
+
+    public static String listToString(LinkedList<Node> ll) {
+        String result = "";
+        for (Node n : ll) {
+            if (n != null) {
+                result = result + n.getText() + " ";
+            }
+        }
+        return result;
+    }
+
+    public static boolean calculate(String token) {
+        if (isValid(token)) {
+            String[] tokens = token.split("\\+|-");
+            ArrayList<String> operasi = new ArrayList<>();
+            for (int i = 0; i < tokens.length; i++) {
+                if (tokens[i].contains("*")) {
+                    String[] tempToken = tokens[i].split("\\*");
+                    double result = Double.parseDouble(tempToken[0]) * Double.parseDouble(tempToken[1]);
+                    Log.d("CALCULATE", result + " *");
+                    operasi.add("" + result);
+                } else if (tokens[i].contains("/")) {
+                    String[] tempToken = tokens[i].split("/");
+                    double result = Double.parseDouble(tempToken[0]) / Double.parseDouble(tempToken[1]);
+                    operasi.add("" + result);
+                    Log.d("CALCULATE", result + " /");
+                } else {
+                    operasi.add(tokens[i]);
+                }
+            }
+            String[] semua = token.split(" ");
+            ArrayList<String> opTambahKurang = new ArrayList<>();
+            for (int i = 0; i < semua.length; i++) {
+                if (semua[i].equalsIgnoreCase("+") || semua[i].equalsIgnoreCase("-")) {
+                    opTambahKurang.add(semua[i]);
+                }
+            }
+            String od1 = operasi.get(0);
+            String od2 = "";
+            String op = "";
+            for (int i = 1; i < operasi.size(); i++) {
+                od2 = operasi.get(i);
+                op = opTambahKurang.get(i - 1);
+                Log.d("CALCULATE", "OPERASI: " + od1 + " " + op + " " + od2);
+                if (op.equalsIgnoreCase("+")) {
+                    result = Double.parseDouble(od1) + Double.parseDouble(od2);
+                    Log.d("CALCULATE", result + " +");
+                    od1 = "" + result;
+                } else if (op.equalsIgnoreCase("-")) {
+                    result = Double.parseDouble(od1) - Double.parseDouble(od2);
+                    Log.d("CALCULATE", result + " -");
+                    od1 = "" + result;
+                }
+            }
+            for (String top : operasi) {
+                Log.d("CALCULATE", "top: " + top);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isValid(String str) {
+        String[] token = str.split(" ");
+        int jumlahOperand = 0;
+        int jumlahOperator = 0;
+        if (str.length() != 0) {
+            for (int i = 0; i < token.length; i++) {
+                //operand
+                if (i % 2 == 0) {
+                    if (token[i].matches("\\+|-|\\*|/")) {
+                        return false;
+                    }
+                    jumlahOperand++;
+                }
+                //operator
+                else {
+                    if (!token[i].matches("\\+|-|\\*|/")) {
+                        return false;
+                    }
+                    jumlahOperator++;
+                }
+            }
+        } else {
+            return false;
+        }
+        if(jumlahOperand - jumlahOperator != 1 || jumlahOperand == 1){
+            return false;
+        }
+        return true;
     }
 }

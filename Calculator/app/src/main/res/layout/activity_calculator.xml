@@ -3,7 +3,38 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="@color/lightOrange">
+
+    <ImageView
+        android:id="@+id/iv_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
+    <ImageView
+        android:id="@+id/trash_zone"
+        android:layout_width="300px"
+        android:layout_height="300px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/trash_zone" />
+
+    <TextView
+        android:id="@+id/topTv"
+        android:layout_width="match_parent"
+        android:layout_height="250px"
+        android:background="@drawable/background_with_opacity"
+        android:textAlignment="center"/>
+
+    <ImageView
+        android:layout_width="500px"
+        android:layout_height="200px"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/drag_here"/>
 
     <Spinner
         android:id="@+id/sOperator"
@@ -25,7 +56,8 @@
         android:layout_toRightOf="@id/sOperator"
         android:layout_marginBottom="30px"
         android:background="@null"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_button"/>
 
     <EditText
         android:id="@+id/etOperand"
@@ -51,28 +83,8 @@
         android:layout_marginBottom="30px"
         android:layout_marginRight="100px"
         android:background="@null"
-        android:scaleType="fitCenter" />
-
-    <ImageView
-        android:id="@+id/trash_zone"
-        android:layout_width="300px"
-        android:layout_height="300px"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/trash_zone" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="250px"
-        android:background="@drawable/background_with_opacity"
-        android:textAlignment="center"/>
-
-    <ImageView
-        android:layout_width="500px"
-        android:layout_height="200px"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/drag_here"/>
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_button"/>
 
     <ImageButton
         android:id="@+id/bCalculate"
@@ -83,4 +95,12 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/calculate_selector" />
+
+    <CheckBox
+        android:id="@+id/cbPrecedence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
+        android:layout_below="@id/topTv"
+        android:text="Precedence"/>
 </RelativeLayout>
