@@ -104,10 +104,12 @@ public class Calculator {
                     String[] tempToken = tokens[i].split("\\*");
                     double result = Double.parseDouble(tempToken[0]) * Double.parseDouble(tempToken[1]);
                     Log.d("CALCULATE", result + " *");
+                    Calculator.result = result;
                     operasi.add("" + result);
                 } else if (tokens[i].contains("/")) {
                     String[] tempToken = tokens[i].split("/");
                     double result = Double.parseDouble(tempToken[0]) / Double.parseDouble(tempToken[1]);
+                    Calculator.result = result;
                     operasi.add("" + result);
                     Log.d("CALCULATE", result + " /");
                 } else {
