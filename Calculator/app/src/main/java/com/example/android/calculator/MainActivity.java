@@ -5,11 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -85,6 +84,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * bakal dipanggil pas on create selesai di lakuin.
+     * */
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(mCanvas == null) {
+            if (hasFocus) {
+                //INISIALISASI CANVAS
+                Bitmap bitmap = Bitmap.createBitmap(ivCanvas.getWidth(), ivCanvas.getHeight(), Bitmap.Config.ARGB_8888);
+                this.ivCanvas.setImageBitmap(bitmap);
+                this.mCanvas = new Canvas(bitmap);
+                resetCanvas();
+            }
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onClick(View view) {
@@ -109,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String token = Calculator.listToString(llList);
                 if (Calculator.calculate(token)) {
                     resetCanvas();
-                    drawSlot();
                     draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
                     for (Node civ2 : onCalculationList) {
                         markRemove(civ2);
@@ -125,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 if (Calculator.getAnswer(llList)) {
                     resetCanvas();
-                    drawSlot();
                     draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
                     for (Node civ2 : onCalculationList) {
                         markRemove(civ2);
@@ -141,18 +155,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Log.d("CALCULATE", "TIDAK VALID");
                 }
             }
-        }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            //INISIALISASI CANVAS
-            Bitmap bitmap = Bitmap.createBitmap(ivCanvas.getWidth(), ivCanvas.getHeight(), Bitmap.Config.ARGB_8888);
-            this.ivCanvas.setImageBitmap(bitmap);
-            this.mCanvas = new Canvas(bitmap);
-            drawSlot();
         }
     }
 
@@ -177,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Log.d("ONTOUCH", "MOVE");
                 if (currentN != null) {
                     resetCanvas();
-                    drawSlot();
                     for (Node n2 : nodes) {
                         if (n2 == currentN) {
                             redraw(n2, motionEvent.getX(), motionEvent.getY());
@@ -208,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 currentN.setY(tempY);
                                 removeFromList(currentN);
                                 resetCanvas();
-                                drawSlot();
                                 for (Node n : nodes) {
                                     redraw(n);
                                 }
@@ -223,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 currentN.setX(tempX);
                                 currentN.setY(tempY);
                                 resetCanvas();
-                                drawSlot();
                                 for (Node n : nodes) {
                                     redraw(n);
                                 }
@@ -248,7 +247,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (currentN.cX >= WIDTH - 300 && currentN.cX <= WIDTH) {
                         if (currentN.cY >= HEIGHT - 300 && currentN.cY <= HEIGHT) {
                             resetCanvas();
-                            drawSlot();
                             for (Node n : nodes) {
                                 if (n == currentN) {
                                     nodes.remove(n);
@@ -271,8 +269,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * mereset canvas menjadi kosong
      */
     public void resetCanvas() {
-        drawSlot();
         mCanvas.drawColor(getResources().getColor(R.color.lightOrange));
+        drawSlot();
         this.ivCanvas.invalidate();
     }
 
@@ -283,28 +281,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void draw(String text, int id) {
         Paint paint = new Paint();
-        Paint paintBg = new Paint();
+        Paint fillPaint = new Paint();
+        Paint strokePaint = new Paint();
         float w = 0;
         float h = 0;
         switch (id) {
             case 0:
                 paint.setTextSize(45f);
-                paintBg.setColor(getResources().getColor(R.color.orange));
+                fillPaint.setColor(getResources().getColor(R.color.orange));
                 w = 246;
                 break;
             case 1:
                 paint.setTextSize(90f);
-                paintBg.setColor(getResources().getColor(R.color.darkLightOrange));
+                fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
                 w = 84;
                 break;
         }
         h = 100;
-        paintBg.setStyle(Paint.Style.FILL);
         paint.setColor(getResources().getColor(R.color.black));
+        strokePaint.setColor(getResources().getColor(R.color.black));
+        fillPaint.setStyle(Paint.Style.FILL);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setStrokeWidth(10f);
         float randX = (float) Math.random() * (WIDTH - 600) + 300;
         float randY = (float) (Math.random()) * (HEIGHT - 1000) + 400;
-        Log.d("ONTOUCH", randX + " " + randY);
-        mCanvas.drawRect(randX, randY, randX + w, randY + h, paintBg);
+//        Log.d("ONTOUCH", randX + " " + randY);
+        RectF nRect = new RectF(randX,randY,randX + w, randY + h);
+        mCanvas.drawRoundRect(nRect,30,30,fillPaint);
+        mCanvas.drawRoundRect(nRect,30,30,strokePaint);
         mCanvas.drawText(text, randX + (w / 2) - ((paint.measureText(text)) / 2), randY + (h / 2) + (paint.getTextSize() / 2), paint);
         nodes.add(new Node(text, randX, randY, w, h, id));
         ivCanvas.invalidate();
@@ -317,25 +321,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void redraw(Node n) {
         if (n.id != -1) {
             Paint paint = new Paint();
-            Paint paintBg = new Paint();
+            Paint fillPaint = new Paint();
+            Paint strokePaint = new Paint();
             float w = 0;
             float h = 0;
             switch (n.id) {
                 case 0:
                     paint.setTextSize(45f);
-                    paintBg.setColor(getResources().getColor(R.color.orange));
+                    fillPaint.setColor(getResources().getColor(R.color.orange));
                     w = 246;
                     break;
                 case 1:
                     paint.setTextSize(90f);
-                    paintBg.setColor(getResources().getColor(R.color.darkLightOrange));
+                    fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
                     w = 84;
                     break;
             }
             h = 100;
-            paintBg.setStyle(Paint.Style.FILL);
             paint.setColor(getResources().getColor(R.color.black));
-            mCanvas.drawRect(n.cX, n.cY, n.cX + w, n.cY + h, paintBg);
+            strokePaint.setColor(getResources().getColor(R.color.black));
+            fillPaint.setStyle(Paint.Style.FILL);
+            strokePaint.setStyle(Paint.Style.STROKE);
+            strokePaint.setStrokeWidth(10f);
+            RectF nRect = new RectF(n.cX, n.cY, n.cX + w, n.cY + h);
+            mCanvas.drawRoundRect(nRect,30,30,fillPaint);
+            mCanvas.drawRoundRect(nRect,30,30,strokePaint);
             mCanvas.drawText(n.text, n.cX + (w / 2) - ((paint.measureText(n.text)) / 2), n.cY + (h / 2) + (paint.getTextSize() / 2), paint);
             ivCanvas.invalidate();
         }
@@ -350,25 +360,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void redraw(Node n, float currX, float currY) {
         if (n.id != -1) {
             Paint paint = new Paint();
-            Paint paintBg = new Paint();
+            Paint fillPaint = new Paint();
+            Paint strokePaint = new Paint();
             float w = 0;
             float h = 0;
             switch (n.id) {
                 case 0:
                     paint.setTextSize(45f);
-                    paintBg.setColor(getResources().getColor(R.color.orange));
+                    fillPaint.setColor(getResources().getColor(R.color.orange));
                     w = 246;
                     break;
                 case 1:
                     paint.setTextSize(90f);
-                    paintBg.setColor(getResources().getColor(R.color.darkLightOrange));
+                    fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
                     w = 84;
                     break;
             }
             h = 100;
-            paintBg.setStyle(Paint.Style.FILL);
             paint.setColor(getResources().getColor(R.color.black));
-            mCanvas.drawRect(currX - (w/2), currY - h , currX + (w/2), currY , paintBg);
+            strokePaint.setColor(getResources().getColor(R.color.black));
+            fillPaint.setStyle(Paint.Style.FILL);
+            strokePaint.setStyle(Paint.Style.STROKE);
+            strokePaint.setStrokeWidth(10f);
+            RectF nRect = new RectF(currX - (w/2), currY - h , currX + (w/2), currY);
+            mCanvas.drawRoundRect(nRect,30,30,fillPaint);
+            mCanvas.drawRoundRect(nRect,30,30,strokePaint);
             mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2) + (paint.getTextSize() / 2) , paint);
             n.cX = currX - (w/2);
             n.cY = currY - h ;
@@ -416,9 +432,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 width = 84;
             }
-            mCanvas.drawRect(x, y, x + width, y + height, paint);
+            RectF nRect = new RectF(x, y, x + width, y + height);
+            mCanvas.drawRoundRect(nRect,30,30,paint);
         }
-        ivCanvas.invalidate();
     }
 
     public boolean contains(Node n) {
@@ -496,7 +512,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         onCalculationList[getIdxTerdekat(n)] = n;
         setPosition(n);
         resetCanvas();
-        drawSlot();
         for (Node n2 : nodes) {
             redraw(n2);
         }
