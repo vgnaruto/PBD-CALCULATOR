@@ -158,10 +158,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        Node temp = nodes.get(0);
-        Log.d("ONTOUCH", motionEvent.getX() + " " + motionEvent.getY() +
-                "\n" + temp.getX() + " " + (temp.getX() + temp.getWidth()) +
-                "\n" + temp.getY() + " " + (temp.getY() + temp.getHeight()));
+//        Node temp = nodes.get(0);
+//        Log.d("ONTOUCH", motionEvent.getX() + " " + motionEvent.getY() +
+//                "\n" + temp.getX() + " " + (temp.getX() + temp.getWidth()) +
+//                "\n" + temp.getY() + " " + (temp.getY() + temp.getHeight()));
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 for (Node n : nodes) {
@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Digunakan untuk mengisi nilai array coordinatX saja
      */
     private int posisiX(int indeks) {
-        int currX = 110;
+        int currX = 150;
         if (indeks == 0) {
             return currX;
         } else {
