@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/trash_zone"
-        android:layout_width="300px"
-        android:layout_height="300px"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/trash_zone" />
@@ -26,16 +26,16 @@
         android:textAlignment="center"/>
 
     <ImageView
-        android:layout_width="500px"
-        android:layout_height="200px"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/drag_here"/>
 
     <Spinner
         android:id="@+id/sOperator"
-        android:layout_width="150px"
-        android:layout_height="100px"
+        android:layout_width="75dp"
+        android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/bCalculate"
         android:layout_marginLeft="100px"
