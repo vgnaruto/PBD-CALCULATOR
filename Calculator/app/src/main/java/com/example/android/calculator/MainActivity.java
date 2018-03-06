@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -24,8 +25,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
-    public static final int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
-    public static final int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
+    public static int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
+    public static int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
     public static Node currentN;
 
     private final int OPERAND_WIDTH = 246;
@@ -82,13 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < coordinatX.length; i++) {
             coordinatX[i] = posisiX(i);
         }
-
-        //INISIALISASI CANVAS
-        Bitmap bitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
-        this.ivCanvas.setImageBitmap(bitmap);
-        this.mCanvas = new Canvas(bitmap);
-
-        drawSlot();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -151,25 +145,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            //INISIALISASI CANVAS
+            Bitmap bitmap = Bitmap.createBitmap(ivCanvas.getWidth(), ivCanvas.getHeight(), Bitmap.Config.ARGB_8888);
+            this.ivCanvas.setImageBitmap(bitmap);
+            this.mCanvas = new Canvas(bitmap);
+            drawSlot();
+        }
+    }
+
+    @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-//        Node temp = nodes.get(0);
-//        Log.d("ONTOUCH", motionEvent.getRawX() + " " + motionEvent.getRawY() +
-//                "\n" + temp.getX() + " " + (temp.getX() + temp.getWidth()) +
-//                "\n" + temp.getY() + " " + (temp.getY() + temp.getHeight()));
+        Node temp = nodes.get(0);
+        Log.d("ONTOUCH", motionEvent.getX() + " " + motionEvent.getY() +
+                "\n" + temp.getX() + " " + (temp.getX() + temp.getWidth()) +
+                "\n" + temp.getY() + " " + (temp.getY() + temp.getHeight()));
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 for (Node n : nodes) {
-                    if (n.id == 1) {
-                        if (motionEvent.getX() >= n.getX() && motionEvent.getX() <= n.getX() + n.getWidth()) {
-                            if (motionEvent.getY() >= n.getY() && motionEvent.getY() <= n.getY() + n.getHeight()) {
-                                currentN = n;
-                            }
-                        }
-                    } else if (n.id == 0) {
-                        if (motionEvent.getX() >= n.getX() && motionEvent.getX() <= n.getX() + n.getWidth()) {
-                            if (motionEvent.getY() >= n.getY() && motionEvent.getY() <= n.getY() + n.getHeight()) {
-                                currentN = n;
-                            }
+                    if (motionEvent.getX() >= n.getX() && motionEvent.getX() <= n.getX() + n.getWidth()) {
+                        if (motionEvent.getY() >= n.getY() && motionEvent.getY() <= n.getY() + n.getHeight()) {
+                            currentN = n;
                         }
                     }
                 }
@@ -266,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 currentN = null;
                 break;
         }
-
         return true;
     }
 
@@ -306,9 +303,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         paint.setColor(getResources().getColor(R.color.black));
         float randX = (float) Math.random() * (WIDTH - 600) + 300;
         float randY = (float) (Math.random()) * (HEIGHT - 1000) + 400;
-//        mCanvas.drawRect(randX-20, randY-paint.getTextSize(), randX + paint.measureText(text)+20, randY+h, paintBg);
+        Log.d("ONTOUCH", randX + " " + randY);
         mCanvas.drawRect(randX, randY, randX + w, randY + h, paintBg);
-//        mCanvas.drawText(text, randX, randY-10, paint);
         mCanvas.drawText(text, randX + (w / 2) - ((paint.measureText(text)) / 2), randY + (h / 2) + (paint.getTextSize() / 2), paint);
         nodes.add(new Node(text, randX, randY, w, h, id));
         ivCanvas.invalidate();
@@ -372,10 +368,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             h = 100;
             paintBg.setStyle(Paint.Style.FILL);
             paint.setColor(getResources().getColor(R.color.black));
-            n.cX = currX;
-            n.cY = currY;
-            mCanvas.drawRect(n.cX, n.cY, n.cX + w, n.cY + h, paintBg);
-            mCanvas.drawText(n.text, n.cX + (w / 2) - ((paint.measureText(n.text)) / 2), n.cY + (h / 2) + (paint.getTextSize() / 2), paint);
+            mCanvas.drawRect(currX - (w/2), currY - h , currX + (w/2), currY , paintBg);
+            mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2) + (paint.getTextSize() / 2) , paint);
+            n.cX = currX - (w/2);
+            n.cY = currY - h ;
             ivCanvas.invalidate();
         }
     }
