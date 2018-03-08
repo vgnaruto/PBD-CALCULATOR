@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayAdapter<CharSequence> adapter;
     private ImageView trashZone;
     private CheckBox cbPrecedence;
+    private CustomTextView tvResult;
 
     private ImageView ivCanvas;
     private Canvas mCanvas;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.rLayout = findViewById(R.id.relativeLayout);
         this.ivCanvas = findViewById(R.id.iv_canvas);
         this.cbPrecedence = findViewById(R.id.cbPrecedence);
+        this.tvResult = findViewById(R.id.tvResult);
 
         //ADAPTER SPINNER
         this.adapter = ArrayAdapter.createFromResource(this, R.array.operator, android.R.layout.simple_spinner_item);
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.bAddOperand.setOnClickListener(this);
         this.bAddOperator.setOnClickListener(this);
         this.bCalculate.setOnClickListener(this);
+        this.tvResult.setOnClickListener(this);
         this.ivCanvas.setOnTouchListener(this);
 
         //INISIALISASI ATTRIBUT
@@ -125,7 +129,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String token = Calculator.listToString(llList);
                 if (Calculator.calculate(token)) {
                     resetCanvas();
-                    draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
+//                    draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
+                    tvResult.setText(Calculator.resultString);
+                    tvResult.setOnCalculationList(onCalculationList);
                     for (Node civ2 : onCalculationList) {
                         markRemove(civ2);
                     }
@@ -140,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 if (Calculator.getAnswer(llList)) {
                     resetCanvas();
-                    draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
+//                    draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
+                    tvResult.setText(Calculator.resultString);
+                    tvResult.setOnCalculationList(onCalculationList);
                     for (Node civ2 : onCalculationList) {
                         markRemove(civ2);
                     }
@@ -154,6 +162,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     toast.show();
 //                Log.d("CALCULATE", "TIDAK VALID");
                 }
+            }
+        }else if(view == tvResult){
+            if(!tvResult.getText().toString().equalsIgnoreCase("n/a")){
+                draw(tvResult.getText().toString(),0);
             }
         }
     }

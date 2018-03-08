@@ -14,6 +14,7 @@ import javax.xml.xpath.XPathExpression;
  */
 
 public class Calculator {
+    public static String resultString = "";
     public static double result = 0;
 
     public static double calculate(String operand1, String operand2, String operator) {
@@ -61,7 +62,12 @@ public class Calculator {
                     } else {
                         op2 = n.getText();
                         op1 = "" + Calculator.calculate(op1, op2, ot);
+                        if(op2.equalsIgnoreCase("0") && ot.equalsIgnoreCase("/")){
+                            resultString = "n/a";
+                            return true;
+                        }
                         result = Double.parseDouble(op1);
+                        resultString = (int)result+"";
                         op2 = "";
                         ot = "";
                     }
@@ -103,15 +109,21 @@ public class Calculator {
                 if (tokens[i].contains("*")) {
                     String[] tempToken = tokens[i].split("\\*");
                     double result = Double.parseDouble(tempToken[0]) * Double.parseDouble(tempToken[1]);
-                    Log.d("CALCULATE", result + " *");
+//                    Log.d("CALCULATE", result + " *");
                     Calculator.result = result;
+                    Calculator.resultString = (int)result+"";
                     operasi.add("" + result);
                 } else if (tokens[i].contains("/")) {
                     String[] tempToken = tokens[i].split("/");
                     double result = Double.parseDouble(tempToken[0]) / Double.parseDouble(tempToken[1]);
+                    if(tempToken[2].equalsIgnoreCase("0")){
+                        Calculator.resultString = "n/a";
+                        return true;
+                    }
                     Calculator.result = result;
+                    Calculator.resultString = (int)result+"";
                     operasi.add("" + result);
-                    Log.d("CALCULATE", result + " /");
+//                    Log.d("CALCULATE", result + " /");
                 } else {
                     operasi.add(tokens[i]);
                 }
@@ -129,14 +141,16 @@ public class Calculator {
             for (int i = 1; i < operasi.size(); i++) {
                 od2 = operasi.get(i);
                 op = opTambahKurang.get(i - 1);
-                Log.d("CALCULATE", "OPERASI: " + od1 + " " + op + " " + od2);
+//                Log.d("CALCULATE", "OPERASI: " + od1 + " " + op + " " + od2);
                 if (op.equalsIgnoreCase("+")) {
                     result = Double.parseDouble(od1) + Double.parseDouble(od2);
-                    Log.d("CALCULATE", result + " +");
+                    Calculator.resultString = (int)result+"";
+//                    Log.d("CALCULATE", result + " +");
                     od1 = "" + result;
                 } else if (op.equalsIgnoreCase("-")) {
                     result = Double.parseDouble(od1) - Double.parseDouble(od2);
-                    Log.d("CALCULATE", result + " -");
+                    Calculator.resultString = (int)result+"";
+//                    Log.d("CALCULATE", result + " -");
                     od1 = "" + result;
                 }
             }
