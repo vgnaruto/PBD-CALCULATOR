@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Node[] onCalculationList;
     private int[] coordinatX;
 
+    private GestureDetector mGestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.bAddOperand.setOnClickListener(this);
         this.bAddOperator.setOnClickListener(this);
         this.bCalculate.setOnClickListener(this);
-        this.tvResult.setOnClickListener(this);
         this.ivCanvas.setOnTouchListener(this);
+        this.tvResult.setOnTouchListener(this);
 
         //INISIALISASI ATTRIBUT
         nodes = new ArrayList<>();
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < coordinatX.length; i++) {
             coordinatX[i] = posisiX(i);
         }
+        this.mGestureDetector = new GestureDetector(this,new CustomGestureListener());
     }
 
     /**
@@ -165,129 +169,132 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Log.d("CALCULATE", "TIDAK VALID");
                 }
             }
-        } else if (view == tvResult) {
-            if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
-                draw(tvResult.getText().toString(), 0);
-            }
         }
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        if(view == ivCanvas) {
 //        Node temp = nodes.get(0);
 //        Log.d("ONTOUCH", motionEvent.getX() + " " + motionEvent.getY() +
 //                "\n" + temp.getX() + " " + (temp.getX() + temp.getWidth()) +
 //                "\n" + temp.getY() + " " + (temp.getY() + temp.getHeight()));
-        switch (motionEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                for (Node n : nodes) {
-                    if (motionEvent.getX() >= n.getX() && motionEvent.getX() <= n.getX() + n.getWidth()) {
-                        if (motionEvent.getY() >= n.getY() && motionEvent.getY() <= n.getY() + n.getHeight()) {
-                            currentN = n;
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    for (Node n : nodes) {
+                        if (motionEvent.getX() >= n.getX() && motionEvent.getX() <= n.getX() + n.getWidth()) {
+                            if (motionEvent.getY() >= n.getY() && motionEvent.getY() <= n.getY() + n.getHeight()) {
+                                currentN = n;
+                            }
                         }
                     }
-                }
 //                Log.d("ONTOUCH", "DOWN " + (currentN != null));
-                break;
-            case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_MOVE:
 //                Log.d("ONTOUCH", "MOVE");
-                if (currentN != null) {
-                    //cek x layar
-                    if (motionEvent.getX() - (currentN.getWidth() / 2) > 0 && motionEvent.getX() + (currentN.getWidth() / 2) < ivCanvas.getWidth()) {
-                        //cek y layar
-                        if (motionEvent.getY() - currentN.getHeight() > 0 && motionEvent.getY() < ivCanvas.getHeight()) {
-                            //cek x , y precedence
-                            if (motionEvent.getX() - (currentN.getWidth() / 2) > cbPrecedence.getX() + cbPrecedence.getWidth() + 10
-                                    || motionEvent.getY() - currentN.getHeight() > cbPrecedence.getY() + cbPrecedence.getHeight() + 10) {
-                                //cek x , t llResult
-                                if(motionEvent.getX() + (currentN.getWidth()/2) < llResult.getX()-10 || motionEvent.getY()-currentN.getHeight() > llResult.getY() + llResult.getHeight()+10){
-                                    resetCanvas();
-                                    for (Node n2 : nodes) {
-                                        if (n2 == currentN) {
-                                            redraw(n2, motionEvent.getX(), motionEvent.getY());
-                                        } else {
-                                            redraw(n2);
+                    if (currentN != null) {
+                        //cek x layar
+                        if (motionEvent.getX() - (currentN.getWidth() / 2) > 0 && motionEvent.getX() + (currentN.getWidth() / 2) < ivCanvas.getWidth()) {
+                            //cek y layar
+                            if (motionEvent.getY() - currentN.getHeight() > 0 && motionEvent.getY() < ivCanvas.getHeight()) {
+                                //cek x , y precedence
+                                if (motionEvent.getX() - (currentN.getWidth() / 2) > cbPrecedence.getX() + cbPrecedence.getWidth() + 10
+                                        || motionEvent.getY() - currentN.getHeight() > cbPrecedence.getY() + cbPrecedence.getHeight() + 10
+                                        || motionEvent.getY() < cbPrecedence.getY() - 10) {
+                                    //cek x , t llResult
+                                    if (motionEvent.getX() + (currentN.getWidth() / 2) < llResult.getX() - 10
+                                            || motionEvent.getY() - currentN.getHeight() > llResult.getY() + llResult.getHeight() + 10
+                                            || motionEvent.getY() < llResult.getY() - 10) {
+                                        resetCanvas();
+                                        for (Node n2 : nodes) {
+                                            if (n2 == currentN) {
+                                                redraw(n2, motionEvent.getX(), motionEvent.getY());
+                                            } else {
+                                                redraw(n2);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                break;
-            case MotionEvent.ACTION_UP:
+                    break;
+                case MotionEvent.ACTION_UP:
 //                Log.d("ONTOUCH", "UP");
-                //kalau di area atas
-                if (currentN != null) {
-                    if (currentN.getY() <= 250) {
-                        //kalau view sudah ada di slot
-                        if (contains(currentN)) {
-                            int idx = getIdxTerdekat(currentN);
-                            //kalau slot baru masih kosong
-                            if (isKosong(idx)) {
-                                removeFromList(currentN);
-                                add(currentN);
+                    //kalau di area atas
+                    if (currentN != null) {
+                        if (currentN.getY() <= 250) {
+                            //kalau view sudah ada di slot
+                            if (contains(currentN)) {
+                                int idx = getIdxTerdekat(currentN);
+                                //kalau slot baru masih kosong
+                                if (isKosong(idx)) {
+                                    removeFromList(currentN);
+                                    add(currentN);
+                                }
+                                //kalau slot baru tidak kosong
+                                else {
+                                    float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
+                                    float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
+                                    currentN.setX(tempX);
+                                    currentN.setY(tempY);
+                                    removeFromList(currentN);
+                                    resetCanvas();
+                                    for (Node n : nodes) {
+                                        redraw(n);
+                                    }
+                                }
                             }
-                            //kalau slot baru tidak kosong
+                            //kalau view belum di slot
                             else {
-                                float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
-                                float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
-                                currentN.setX(tempX);
-                                currentN.setY(tempY);
+                                //kalau slot baru tidak kosong
+                                if (!isKosong(getIdxTerdekat(currentN))) {
+                                    float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
+                                    float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
+                                    currentN.setX(tempX);
+                                    currentN.setY(tempY);
+                                    resetCanvas();
+                                    for (Node n : nodes) {
+                                        redraw(n);
+                                    }
+                                }
+                                //kalau slot baru kosong
+                                else {
+                                    add(currentN);
+                                }
+                            }
+                        }
+                        //kalau bukan di area atas
+                        else {
+                            //kalau view udah ada di array
+                            if (contains(currentN)) {
                                 removeFromList(currentN);
+                            }
+                            //kalau view belum ada di array
+                            else {
+                                //do nothing
+                            }
+                        }
+                        if (currentN.cX >= WIDTH - 300 && currentN.cX <= WIDTH) {
+                            if (currentN.cY >= HEIGHT - 300 && currentN.cY <= HEIGHT) {
                                 resetCanvas();
+                                for (Node n : nodes) {
+                                    if (n == currentN) {
+                                        nodes.remove(n);
+                                        break;
+                                    }
+                                }
                                 for (Node n : nodes) {
                                     redraw(n);
                                 }
                             }
                         }
-                        //kalau view belum di slot
-                        else {
-                            //kalau slot baru tidak kosong
-                            if (!isKosong(getIdxTerdekat(currentN))) {
-                                float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
-                                float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
-                                currentN.setX(tempX);
-                                currentN.setY(tempY);
-                                resetCanvas();
-                                for (Node n : nodes) {
-                                    redraw(n);
-                                }
-                            }
-                            //kalau slot baru kosong
-                            else {
-                                add(currentN);
-                            }
-                        }
                     }
-                    //kalau bukan di area atas
-                    else {
-                        //kalau view udah ada di array
-                        if (contains(currentN)) {
-                            removeFromList(currentN);
-                        }
-                        //kalau view belum ada di array
-                        else {
-                            //do nothing
-                        }
-                    }
-                    if (currentN.cX >= WIDTH - 300 && currentN.cX <= WIDTH) {
-                        if (currentN.cY >= HEIGHT - 300 && currentN.cY <= HEIGHT) {
-                            resetCanvas();
-                            for (Node n : nodes) {
-                                if (n == currentN) {
-                                    nodes.remove(n);
-                                    break;
-                                }
-                            }
-                            for (Node n : nodes) {
-                                redraw(n);
-                            }
-                        }
-                    }
-                }
-                currentN = null;
-                break;
+                    currentN = null;
+                    break;
+            }
+        }else if(view == tvResult){
+            return mGestureDetector.onTouchEvent(motionEvent);
         }
         return true;
     }
@@ -311,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Paint fillPaint = new Paint();
         Paint strokePaint = new Paint();
         float w = 0;
-        float h = 0;
+        float h = 100;
         switch (id) {
             case 0:
                 paint.setTextSize(45f);
@@ -324,7 +331,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 w = 84;
                 break;
         }
-        h = 100;
         paint.setColor(getResources().getColor(R.color.black));
         strokePaint.setColor(getResources().getColor(R.color.black));
         fillPaint.setStyle(Paint.Style.FILL);
@@ -342,6 +348,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
+     * @param1 : text yang bakal di tampilih
+     * @param2 : id node. 0 = operand, 1 = operator
+     * Untuk menambahkan node baru
+     */
+    private void redraw(Node n,float currX) {
+        Paint paint = new Paint();
+        Paint fillPaint = new Paint();
+        Paint strokePaint = new Paint();
+        float w = 0;
+        float h = 100;
+        switch (n.id) {
+            case 0:
+                paint.setTextSize(45f);
+                fillPaint.setColor(getResources().getColor(R.color.orange));
+                w = 246;
+                break;
+            case 1:
+                paint.setTextSize(90f);
+                fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
+                w = 84;
+                break;
+        }
+        paint.setColor(getResources().getColor(R.color.black));
+        strokePaint.setColor(getResources().getColor(R.color.black));
+        fillPaint.setStyle(Paint.Style.FILL);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setStrokeWidth(10f);
+        float currY = 100;
+//        Log.d("ONTOUCH", randX + " " + randY);
+        RectF nRect = new RectF(currX, currY, currX + w, currY + h);
+        mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
+        mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
+        mCanvas.drawText(n.getText(), currX + (w / 2) - ((paint.measureText(n.getText())) / 2), currY + (h / 2) + (paint.getTextSize() / 2), paint);
+        nodes.add(new Node(n.getText(), currX, currY, w, h, n.id));
+        ivCanvas.invalidate();
+    }
+
+    /**
      * @param1 : node yang di pilih
      * menggambar ulang node dengan posisi yang sama
      */
@@ -351,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Paint fillPaint = new Paint();
             Paint strokePaint = new Paint();
             float w = 0;
-            float h = 0;
+            float h = 100;
             switch (n.id) {
                 case 0:
                     paint.setTextSize(45f);
@@ -364,7 +408,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     w = 84;
                     break;
             }
-            h = 100;
             paint.setColor(getResources().getColor(R.color.black));
             strokePaint.setColor(getResources().getColor(R.color.black));
             fillPaint.setStyle(Paint.Style.FILL);
@@ -390,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Paint fillPaint = new Paint();
             Paint strokePaint = new Paint();
             float w = 0;
-            float h = 0;
+            float h = 100;
             switch (n.id) {
                 case 0:
                     paint.setTextSize(45f);
@@ -403,7 +446,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     w = 84;
                     break;
             }
-            h = 100;
             paint.setColor(getResources().getColor(R.color.black));
             strokePaint.setColor(getResources().getColor(R.color.black));
             fillPaint.setStyle(Paint.Style.FILL);
@@ -417,6 +459,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             n.cY = currY - h;
             ivCanvas.invalidate();
         }
+    }
+
+    /**
+     * @param1 : node yang akan di gambar
+     * @param2 : posisi X
+     * method ini digunakan untuk menggambar node yang posisinya ada di atas.
+     * */
+    private void draw(Node n, float currX) {
+        Paint paint = new Paint();
+        Paint fillPaint = new Paint();
+        Paint strokePaint = new Paint();
+        float w = 0;
+        float h = 100;
+        switch (n.id) {
+            case 0:
+                paint.setTextSize(45f);
+                fillPaint.setColor(getResources().getColor(R.color.orange));
+                w = 246;
+                break;
+            case 1:
+                paint.setTextSize(90f);
+                fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
+                w = 84;
+                break;
+        }
+        paint.setColor(getResources().getColor(R.color.black));
+        strokePaint.setColor(getResources().getColor(R.color.black));
+        fillPaint.setStyle(Paint.Style.FILL);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setStrokeWidth(10f);
+        float currY = 100;
+//        Log.d("ONTOUCH", randX + " " + randY);
+        RectF nRect = new RectF(currX, currY, currX + w, currY + h);
+        mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
+        mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
+        mCanvas.drawText(n.getText(), currX + (w / 2) - ((paint.measureText(n.getText())) / 2), currY + (h / 2) + (paint.getTextSize() / 2), paint);
+        nodes.add(new Node(n.getText(), currX, currY, w, h, n.id));
+        ivCanvas.invalidate();
     }
 
     /**
@@ -521,6 +601,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * untuk mengecek apakah onCalculationList kosong atau tidak.
+     * */
+    public boolean isEmpty(){
+        for(Node n : onCalculationList){
+            if(n != null){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void markRemove(Node n) {
         for (Node ns : nodes) {
             if (ns == n) {
@@ -553,5 +645,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int idx = getIdxTerdekat(n);
         n.setX(coordinatX[idx]);
         n.setY(100);
+    }
+
+    private class CustomGestureListener implements GestureDetector.OnGestureListener{
+
+        @Override
+        public boolean onDown(MotionEvent motionEvent) {
+            return true;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent motionEvent) {
+            Log.d("GESTURE","ON SINGLE TAP UP");
+            if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
+                draw(tvResult.getText().toString(), 0);
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent motionEvent) {
+            Log.d("GESTURE","LONG PRESS");
+            if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
+                if(isEmpty()) {
+                    Node[] historyNodes = tvResult.getOnCalculationList();
+                    for (int i = 0; i < historyNodes.length; i++) {
+                        if (historyNodes[i] != null) {
+                            Log.d("GESTURE", "MASUK" + " " + historyNodes[i].id);
+                            nodes.add(historyNodes[i]);
+                            add(historyNodes[i]);
+                        }
+                    }
+                    tvResult.setText("n/a");
+                }else{
+                    Toast toast = Toast.makeText(MainActivity.instances, "Harap kosongkan slot di atas!", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        }
+
+        @Override
+        public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return false;
+        }
     }
 }
