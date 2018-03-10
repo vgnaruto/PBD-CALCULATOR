@@ -31,6 +31,7 @@ public class CustomTextView extends android.support.v7.widget.AppCompatTextView 
     }
 
     public void setOnCalculationList(Node[] onCalculationList) {
+        this.onCalculationList = new Node[9];
         for(int i=0;i<onCalculationList.length;i++){
             if(onCalculationList[i] != null){
                 Node tempNode = new Node(onCalculationList[i].getText(),onCalculationList[i].getX(),onCalculationList[i].getY(),onCalculationList[i].getWidth(),onCalculationList[i].getHeight(),onCalculationList[i].id);

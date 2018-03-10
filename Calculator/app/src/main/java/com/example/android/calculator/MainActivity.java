@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CheckBox cbPrecedence;
     private CustomTextView tvResult;
     private LinearLayout llResult;
+    private TextView topTv;
 
     private ImageView ivCanvas;
     private Canvas mCanvas;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.cbPrecedence = findViewById(R.id.cbPrecedence);
         this.tvResult = findViewById(R.id.tvResult);
         this.llResult = findViewById(R.id.llResult);
+        this.topTv = findViewById(R.id.topTv);
 
         //ADAPTER SPINNER
         this.adapter = ArrayAdapter.createFromResource(this, R.array.operator, android.R.layout.simple_spinner_item);
@@ -336,8 +338,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fillPaint.setStyle(Paint.Style.FILL);
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(10f);
-        float randX = (float) Math.random() * (WIDTH - 600) + 300;
-        float randY = (float) (Math.random()) * (HEIGHT - 1000) + 400;
+        float randX = (float) Math.random() * (ivCanvas.getWidth() - tvResult.getWidth() - cbPrecedence.getWidth() - 400) + cbPrecedence.getWidth();
+        float randY = (float) (Math.random()) * (ivCanvas.getHeight() - topTv.getHeight() - bAddOperand.getHeight() - 125) + topTv.getHeight();
 //        Log.d("ONTOUCH", randX + " " + randY);
         RectF nRect = new RectF(randX, randY, randX + w, randY + h);
         mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
