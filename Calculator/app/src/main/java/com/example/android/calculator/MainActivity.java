@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
     public static int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
     public static Node currentN;
-
     private final int OPERAND_WIDTH = 246;
     private final int OPERATOR_WIDTH = 84;
     private static MainActivity instances;
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView trashZone;
     private CheckBox cbPrecedence;
     private CustomTextView tvResult;
+    private LinearLayout llResult;
 
     private ImageView ivCanvas;
     private Canvas mCanvas;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.ivCanvas = findViewById(R.id.iv_canvas);
         this.cbPrecedence = findViewById(R.id.cbPrecedence);
         this.tvResult = findViewById(R.id.tvResult);
+        this.llResult = findViewById(R.id.llResult);
 
         //ADAPTER SPINNER
         this.adapter = ArrayAdapter.createFromResource(this, R.array.operator, android.R.layout.simple_spinner_item);
@@ -90,11 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * bakal dipanggil pas on create selesai di lakuin.
-     * */
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(mCanvas == null) {
+        if (mCanvas == null) {
             if (hasFocus) {
                 //INISIALISASI CANVAS
                 Bitmap bitmap = Bitmap.createBitmap(ivCanvas.getWidth(), ivCanvas.getHeight(), Bitmap.Config.ARGB_8888);
@@ -163,9 +165,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Log.d("CALCULATE", "TIDAK VALID");
                 }
             }
-        }else if(view == tvResult){
-            if(!tvResult.getText().toString().equalsIgnoreCase("n/a")){
-                draw(tvResult.getText().toString(),0);
+        } else if (view == tvResult) {
+            if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
+                draw(tvResult.getText().toString(), 0);
             }
         }
     }
@@ -190,12 +192,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case MotionEvent.ACTION_MOVE:
 //                Log.d("ONTOUCH", "MOVE");
                 if (currentN != null) {
-                    resetCanvas();
-                    for (Node n2 : nodes) {
-                        if (n2 == currentN) {
-                            redraw(n2, motionEvent.getX(), motionEvent.getY());
-                        } else {
-                            redraw(n2);
+                    //cek x layar
+                    if (motionEvent.getX() - (currentN.getWidth() / 2) > 0 && motionEvent.getX() + (currentN.getWidth() / 2) < ivCanvas.getWidth()) {
+                        //cek y layar
+                        if (motionEvent.getY() - currentN.getHeight() > 0 && motionEvent.getY() < ivCanvas.getHeight()) {
+                            //cek x , y precedence
+                            if (motionEvent.getX() - (currentN.getWidth() / 2) > cbPrecedence.getX() + cbPrecedence.getWidth() + 10
+                                    || motionEvent.getY() - currentN.getHeight() > cbPrecedence.getY() + cbPrecedence.getHeight() + 10) {
+                                //cek x , t llResult
+                                if(motionEvent.getX() + (currentN.getWidth()/2) < llResult.getX()-10 || motionEvent.getY()-currentN.getHeight() > llResult.getY() + llResult.getHeight()+10){
+                                    resetCanvas();
+                                    for (Node n2 : nodes) {
+                                        if (n2 == currentN) {
+                                            redraw(n2, motionEvent.getX(), motionEvent.getY());
+                                        } else {
+                                            redraw(n2);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -318,9 +333,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         float randX = (float) Math.random() * (WIDTH - 600) + 300;
         float randY = (float) (Math.random()) * (HEIGHT - 1000) + 400;
 //        Log.d("ONTOUCH", randX + " " + randY);
-        RectF nRect = new RectF(randX,randY,randX + w, randY + h);
-        mCanvas.drawRoundRect(nRect,30,30,fillPaint);
-        mCanvas.drawRoundRect(nRect,30,30,strokePaint);
+        RectF nRect = new RectF(randX, randY, randX + w, randY + h);
+        mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
+        mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
         mCanvas.drawText(text, randX + (w / 2) - ((paint.measureText(text)) / 2), randY + (h / 2) + (paint.getTextSize() / 2), paint);
         nodes.add(new Node(text, randX, randY, w, h, id));
         ivCanvas.invalidate();
@@ -356,8 +371,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             strokePaint.setStyle(Paint.Style.STROKE);
             strokePaint.setStrokeWidth(10f);
             RectF nRect = new RectF(n.cX, n.cY, n.cX + w, n.cY + h);
-            mCanvas.drawRoundRect(nRect,30,30,fillPaint);
-            mCanvas.drawRoundRect(nRect,30,30,strokePaint);
+            mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
+            mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
             mCanvas.drawText(n.text, n.cX + (w / 2) - ((paint.measureText(n.text)) / 2), n.cY + (h / 2) + (paint.getTextSize() / 2), paint);
             ivCanvas.invalidate();
         }
@@ -394,12 +409,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fillPaint.setStyle(Paint.Style.FILL);
             strokePaint.setStyle(Paint.Style.STROKE);
             strokePaint.setStrokeWidth(10f);
-            RectF nRect = new RectF(currX - (w/2), currY - h , currX + (w/2), currY);
-            mCanvas.drawRoundRect(nRect,30,30,fillPaint);
-            mCanvas.drawRoundRect(nRect,30,30,strokePaint);
-            mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2) + (paint.getTextSize() / 2) , paint);
-            n.cX = currX - (w/2);
-            n.cY = currY - h ;
+            RectF nRect = new RectF(currX - (w / 2), currY - h, currX + (w / 2), currY);
+            mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
+            mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
+            mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2) + (paint.getTextSize() / 2), paint);
+            n.cX = currX - (w / 2);
+            n.cY = currY - h;
             ivCanvas.invalidate();
         }
     }
@@ -445,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 width = 84;
             }
             RectF nRect = new RectF(x, y, x + width, y + height);
-            mCanvas.drawRoundRect(nRect,30,30,paint);
+            mCanvas.drawRoundRect(nRect, 30, 30, paint);
         }
     }
 

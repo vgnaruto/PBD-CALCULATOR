@@ -98,31 +98,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20px"
+        android:padding="5dp"
         android:layout_below="@id/topTv"
+        android:background="@drawable/border_umum"
         android:text="Precedence"/>
 
-    <TextView
-        android:id="@+id/tvResultText"
+    <LinearLayout
+        android:id="@+id/llResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/topTv"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="40px"
-        android:text="Result"/>
-
-    <com.example.android.calculator.CustomTextView
-        android:id="@+id/tvResult"
-        android:layout_below="@id/tvResultText"
-        android:layout_alignParentRight="true"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="100px"
+        android:orientation="vertical"
         android:background="@drawable/border_umum"
-        android:text="n/a"/>
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/tvResultText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40px"
+            android:text="Result"/>
 
+        <com.example.android.calculator.CustomTextView
+            android:id="@+id/tvResult"
+            android:layout_below="@id/tvResultText"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="100px"
+            android:background="@drawable/border_umum"
+            android:text="n/a"/>
+    </LinearLayout>
 </RelativeLayout>
