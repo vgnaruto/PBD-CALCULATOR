@@ -677,21 +677,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onLongPress(MotionEvent motionEvent) {
-            Log.d("GESTURE","LONG PRESS");
-            if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
-                if(isEmpty()) {
-                    Node[] historyNodes = tvResult.getOnCalculationList();
-                    for (int i = 0; i < historyNodes.length; i++) {
-                        if (historyNodes[i] != null) {
-                            Log.d("GESTURE", "MASUK" + " " + historyNodes[i].id);
-                            nodes.add(historyNodes[i]);
-                            add(historyNodes[i]);
+            Log.d("GESTURE", "LONG PRESS");
+//          masih belum bisa, salah recognizing koordinat x-nya
+            if(motionEvent.getX() >= tvResult.getX() && motionEvent.getX() <= tvResult.getWidth() + tvResult.getX()){
+                if(motionEvent.getY() >= tvResult.getY() && motionEvent.getY() <= tvResult.getHeight() + tvResult.getY()){
+                    if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
+                        if(isEmpty()) {
+                            Node[] historyNodes = tvResult.getOnCalculationList();
+                            for (int i = 0; i < historyNodes.length; i++) {
+                                if (historyNodes[i] != null) {
+                                    Log.d("GESTURE", "MASUK" + " " + historyNodes[i].id);
+                                    nodes.add(historyNodes[i]);
+                                    add(historyNodes[i]);
+                                }
+                            }
+                            tvResult.setText("n/a");
+                        }else{
+                            Toast toast = Toast.makeText(MainActivity.instances, "Harap kosongkan slot di atas!", Toast.LENGTH_LONG);
+                            toast.show();
                         }
                     }
-                    tvResult.setText("n/a");
-                }else{
-                    Toast toast = Toast.makeText(MainActivity.instances, "Harap kosongkan slot di atas!", Toast.LENGTH_LONG);
-                    toast.show();
+                }
+            }
+            else if(motionEvent.getX() >= sOperator.getX() && motionEvent.getX() <= sOperator.getWidth() + sOperator.getX()){
+                if(motionEvent.getY() >= sOperator.getY() && motionEvent.getY() <= sOperator.getHeight() + sOperator.getY()){
+                    draw(sOperator.getSelectedItem().toString(), 1);
+                }
+            }
+            else if(motionEvent.getX() >= etOperand.getX() && motionEvent.getX() <= etOperand.getWidth() + etOperand.getX()){
+                if(motionEvent.getY() >= etOperand.getY() && motionEvent.getY() <= etOperand.getHeight() + etOperand.getY()){
+                    draw(etOperand.getText().toString(), 0);
                 }
             }
         }
