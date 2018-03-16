@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < coordinatX.length; i++) {
             coordinatX[i] = posisiX(i);
         }
-        this.mGestureDetector = new GestureDetector(this,new CustomGestureListener());
+        this.mGestureDetector = new GestureDetector(this,new CGTResult());
     }
 
     /**
@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                Log.d("ONTOUCH", "DOWN " + (currentN != null));
                     break;
                 case MotionEvent.ACTION_MOVE:
+//                    Log.d("KOORDINAT","meX: "+motionEvent.getRawX()+"||meY: "+motionEvent.getRawY()+
+//                            "\nllX: "+llResult.getX()+"llWidth: "+llResult.getWidth()+
+//                            "\nllY: "+llResult.getY()+"llHeight: "+llResult.getHeight());
 //                Log.d("ONTOUCH", "MOVE");
                     if (currentN != null) {
                         //cek x layar
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (motionEvent.getX() - (currentN.getWidth() / 2) > cbPrecedence.getX() + cbPrecedence.getWidth() + 10
                                         || motionEvent.getY() - currentN.getHeight() > cbPrecedence.getY() + cbPrecedence.getHeight() + 10
                                         || motionEvent.getY() < cbPrecedence.getY() - 10) {
-                                    //cek x , t llResult
+                                    //cek x , y llResult
                                     if (motionEvent.getX() + (currentN.getWidth() / 2) < llResult.getX() - 10
                                             || motionEvent.getY() - currentN.getHeight() > llResult.getY() + llResult.getHeight() + 10
                                             || motionEvent.getY() < llResult.getY() - 10) {
@@ -350,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * @param1 : text yang bakal di tampilih
+     * @param1 : text yang bakal di tampilin
      * @param2 : id node. 0 = operand, 1 = operator
      * Untuk menambahkan node baru
      */
@@ -649,7 +652,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         n.setY(100);
     }
 
-    private class CustomGestureListener implements GestureDetector.OnGestureListener{
+    private class CGTResult implements GestureDetector.OnGestureListener{
 
         @Override
         public boolean onDown(MotionEvent motionEvent) {
@@ -663,7 +666,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public boolean onSingleTapUp(MotionEvent motionEvent) {
-            Log.d("GESTURE","ON SINGLE TAP UP");
+//            Log.d("GESTURE","ON SINGLE TAP UP");
             if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
                 draw(tvResult.getText().toString(), 0);
             }
@@ -677,10 +680,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onLongPress(MotionEvent motionEvent) {
-            Log.d("GESTURE", "LONG PRESS");
+//            Log.d("GESTURE", "LONG PRESS");
 //          masih belum bisa, salah recognizing koordinat x-nya
-            if(motionEvent.getX() >= tvResult.getX() && motionEvent.getX() <= tvResult.getWidth() + tvResult.getX()){
-                if(motionEvent.getY() >= tvResult.getY() && motionEvent.getY() <= tvResult.getHeight() + tvResult.getY()){
+//            Log.d("KOORDINAT","meX: "+motionEvent.getRawX()+"||meY: "+motionEvent.getRawY()+
+//                    "\nllX: "+llResult.getX()+"llWidth: "+llResult.getWidth()+
+//                    "\nllY: "+llResult.getY()+"llHeight: "+llResult.getHeight());
+
+            if(motionEvent.getRawX() >= llResult.getX() && motionEvent.getRawX() <= llResult.getWidth() + llResult.getX()){
+                if(motionEvent.getRawY() >= llResult.getY() && motionEvent.getRawY() <= llResult.getHeight() + llResult.getY()){
                     if (!tvResult.getText().toString().equalsIgnoreCase("n/a")) {
                         if(isEmpty()) {
                             Node[] historyNodes = tvResult.getOnCalculationList();
