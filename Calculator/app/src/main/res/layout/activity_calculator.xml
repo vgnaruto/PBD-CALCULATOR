@@ -57,14 +57,14 @@
 
     <ImageButton
         android:id="@+id/bAddOperator"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="125px"
+        android:layout_height="125px"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/sOperator"
         android:layout_marginBottom="50px"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/plus"/>
+        android:src="@drawable/add_selector"/>
 
     <EditText
         android:id="@+id/etOperand"
@@ -85,15 +85,15 @@
 
     <ImageButton
         android:id="@+id/bAddOperand"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="125px"
+        android:layout_height="125px"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/trash_zone"
         android:layout_marginBottom="50px"
         android:layout_marginRight="100px"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/plus"/>
+        android:src="@drawable/add_selector"/>
 
     <ImageButton
         android:id="@+id/bCalculate"
