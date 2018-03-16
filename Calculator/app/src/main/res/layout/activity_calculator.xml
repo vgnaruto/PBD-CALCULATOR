@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/trash_zone"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="300px"
+        android:layout_height="300px"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/trash_zone" />
@@ -26,8 +26,8 @@
         android:textAlignment="center"/>
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
@@ -43,18 +43,28 @@
         android:layout_marginRight="50px"
         android:layout_marginBottom="50px"
         android:textAlignment="center"
-        android:background="@drawable/border_umum"/>
+        android:background="@drawable/border_umum"
+        android:clickable="false"/>
+
+    <View
+        android:id="@+id/hiddenSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/sOperator"
+        android:layout_alignRight="@id/sOperator"
+        android:layout_alignBottom="@id/sOperator"
+        android:layout_alignTop="@id/sOperator"/>
 
     <ImageButton
         android:id="@+id/bAddOperator"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/sOperator"
-        android:layout_marginBottom="30px"
+        android:layout_marginBottom="50px"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/add_button"/>
+        android:src="@drawable/plus"/>
 
     <EditText
         android:id="@+id/etOperand"
@@ -69,19 +79,21 @@
         android:hint="angka"
         android:inputType="number"
         android:maxLength="8"
-        android:background="@drawable/border_umum"/>
+        android:background="@drawable/border_umum"
+        android:clickable="false"
+        android:longClickable="false"/>
 
     <ImageButton
         android:id="@+id/bAddOperand"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/trash_zone"
-        android:layout_marginBottom="30px"
+        android:layout_marginBottom="50px"
         android:layout_marginRight="100px"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/add_button"/>
+        android:src="@drawable/plus"/>
 
     <ImageButton
         android:id="@+id/bCalculate"
