@@ -215,6 +215,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (motionEvent.getX() >= n.getX() && motionEvent.getX() <= n.getX() + n.getWidth()) {
                             if (motionEvent.getY() >= n.getY() && motionEvent.getY() <= n.getY() + n.getHeight()) {
                                 currentN = n;
+                                if(contains(currentN)){
+                                    removeFromList(currentN);
+                                }
                             }
                         }
                     }
@@ -386,9 +389,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
         mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
         mCanvas.drawText(text, currX + (w / 2) - ((paint.measureText(text)) / 2), currY + (h / 2) + (paint.getTextSize() / 2), paint);
-        Node newNode = new Node(text, currX, currY, w, h, id);
-        nodes.add(newNode);
-        currentN = newNode;
+        nodes.add(new Node(text, currX, currY, w, h, id));
         ivCanvas.invalidate();
     }
 
