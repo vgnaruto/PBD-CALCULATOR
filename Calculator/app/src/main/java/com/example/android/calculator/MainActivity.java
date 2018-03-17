@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
     public static int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
     public static int longClicked = 0;
-    public static float scale = 0.0f;
     public static Node currentN;
     private final int OPERAND_WIDTH = 246;
     private final int OPERATOR_WIDTH = 84;
@@ -119,10 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             coordinatX[i] = posisiX(i);
         }
         this.mGestureDetector = new GestureDetector(this, new CGTResult());
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        scale = metrics.densityDpi/160f;
-//        Log.d("DENSITY",""+scale);
     }
 
     /**
@@ -281,8 +277,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                                 //kalau slot baru tidak kosong
                                 else {
-                                    float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
-                                    float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
+                                    float tempX = (float) Math.random() * (ivCanvas.getWidth() - tvResult.getWidth() - cbPrecedence.getWidth() - 400) + cbPrecedence.getWidth();
+                                    float tempY = (float) (Math.random()) * (ivCanvas.getHeight() - topTv.getHeight() - bAddOperand.getHeight() - 125) + topTv.getHeight();
                                     currentN.setX(tempX);
                                     currentN.setY(tempY);
                                     removeFromList(currentN);
@@ -296,8 +292,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             else {
                                 //kalau slot baru tidak kosong
                                 if (!isKosong(getIdxTerdekat(currentN))) {
-                                    float tempX = (float) Math.random() * (MainActivity.WIDTH - 400) + 200;
-                                    float tempY = (float) (Math.random()) * (MainActivity.HEIGHT - 600) + 200;
+                                    float tempX = (float) Math.random() * (ivCanvas.getWidth() - tvResult.getWidth() - cbPrecedence.getWidth() - 400) + cbPrecedence.getWidth();
+                                    float tempY = (float) (Math.random()) * (ivCanvas.getHeight() - topTv.getHeight() - bAddOperand.getHeight() - 125) + topTv.getHeight();
                                     currentN.setX(tempX);
                                     currentN.setY(tempY);
                                     resetCanvas();
@@ -375,17 +371,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Paint fillPaint = new Paint();
         Paint strokePaint = new Paint();
         float w = 0;
-        float h = 100;
+//        float h = 100;
+        float h = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (100/3.5f),getResources().getDisplayMetrics()));
         switch (id) {
             case 0:
-                paint.setTextSize(45f);
+                //paint.setTextSize(35f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.orange));
-                w = 246;
+//                w = 246;
+                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
                 break;
             case 1:
-                paint.setTextSize(90f);
+                //paint.setTextSize(90f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
-                w = 84;
+//                w = 84;
+                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
                 break;
         }
         paint.setColor(getResources().getColor(R.color.black));
@@ -399,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RectF nRect = new RectF(currX, currY, currX + w, currY + h);
         mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
         mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
-        mCanvas.drawText(text, currX + (w / 2) - ((paint.measureText(text)) / 2), currY + (h / 2) + (paint.getTextSize() / 2), paint);
+        mCanvas.drawText(text, currX + (w / 2) - ((paint.measureText(text)) / 2), currY + (h / 2)-10 + (paint.getTextSize() / 2), paint);
         nodes.add(new Node(text, currX, currY, w, h, id));
         ivCanvas.invalidate();
     }
@@ -415,17 +416,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Paint fillPaint = new Paint();
         Paint strokePaint = new Paint();
         float w = 0;
-        float h = 100;
+//        float h = 100;
+        float h = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (100/3.5f),getResources().getDisplayMetrics()));
         switch (id) {
             case 0:
-                paint.setTextSize(45f);
+                //paint.setTextSize(35f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.orange));
-                w = 246;
+                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
+//                w = 246;
                 break;
             case 1:
-                paint.setTextSize(90f);
+                //paint.setTextSize(90f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
-                w = 84;
+                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
+//                w = 84;
                 break;
         }
         paint.setColor(getResources().getColor(R.color.black));
@@ -439,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RectF nRect = new RectF(randX, randY, randX + w, randY + h);
         mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
         mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
-        mCanvas.drawText(text, randX + (w / 2) - ((paint.measureText(text)) / 2), randY + (h / 2) + (paint.getTextSize() / 2), paint);
+        mCanvas.drawText(text, randX + (w / 2) - ((paint.measureText(text)) / 2), randY + (h / 2)-10 + (paint.getTextSize() / 2), paint);
         nodes.add(new Node(text, randX, randY, w, h, id));
         ivCanvas.invalidate();
     }
@@ -454,17 +460,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Paint fillPaint = new Paint();
             Paint strokePaint = new Paint();
             float w = 0;
-            float h = 100;
+//            float h = 100;
+            float h = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (100/3.5f),getResources().getDisplayMetrics()));
             switch (n.id) {
                 case 0:
-                    paint.setTextSize(45f);
+                    //paint.setTextSize(35f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.orange));
-                    w = 246;
+//                    w = 246;
+                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
                     break;
                 case 1:
-                    paint.setTextSize(90f);
+                    //paint.setTextSize(90f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
-                    w = 84;
+//                    w = 84;
+                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
                     break;
             }
             paint.setColor(getResources().getColor(R.color.black));
@@ -475,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             RectF nRect = new RectF(n.cX, n.cY, n.cX + w, n.cY + h);
             mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
             mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
-            mCanvas.drawText(n.text, n.cX + (w / 2) - ((paint.measureText(n.text)) / 2), n.cY + (h / 2) + (paint.getTextSize() / 2), paint);
+            mCanvas.drawText(n.text, n.cX + (w / 2) - ((paint.measureText(n.text)) / 2), n.cY + (h / 2)-10 + (paint.getTextSize() / 2), paint);
             ivCanvas.invalidate();
         }
     }
@@ -492,17 +503,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Paint fillPaint = new Paint();
             Paint strokePaint = new Paint();
             float w = 0;
-            float h = 100;
+//            float h = 100;
+            float h = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (100/3.5f),getResources().getDisplayMetrics()));
             switch (n.id) {
                 case 0:
-                    paint.setTextSize(45f);
+                    //paint.setTextSize(35f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.orange));
-                    w = 246;
+//                    w = 246;
+                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
                     break;
                 case 1:
-                    paint.setTextSize(90f);
+                    //paint.setTextSize(90f);
+                    paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
-                    w = 84;
+//                    w = 84;
+                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
                     break;
             }
             paint.setColor(getResources().getColor(R.color.lightBlue));
@@ -513,7 +529,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             RectF nRect = new RectF(currX - (w / 2)-10, currY - h-10, currX + (w / 2)+10, currY+10);
             mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
             mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
-            mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2) + (paint.getTextSize() / 2), paint);
+            mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2)-10 + (paint.getTextSize() / 2), paint);
             n.cX = currX - (w / 2);
             n.cY = currY - h;
             ivCanvas.invalidate();
@@ -553,14 +569,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < coordinatX.length; i++) {
             float y = 100;
             float x = coordinatX[i];
-            float height=100;
+            float height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (100/3.5f),getResources().getDisplayMetrics()));
+            Log.d("HEIGHT",""+height);
             float width;
             if (i % 2 == 0) {
-//                width = 70.285714f *scale;
-                width = 246;
+                width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
             } else {
-//                width = 24f * scale;
-                width = 84;
+                width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
             }
             RectF nRect = new RectF(x, y, x + width, y + height);
             mCanvas.drawRoundRect(nRect, 30, 30, paint);
