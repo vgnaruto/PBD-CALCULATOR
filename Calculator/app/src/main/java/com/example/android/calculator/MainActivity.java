@@ -379,14 +379,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.orange));
 //                w = 246;
-                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
+                w = getPixel(296f);
                 break;
             case 1:
                 //paint.setTextSize(90f);
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
 //                w = 84;
-                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
+                w = getPixel(104f);
                 break;
         }
         paint.setColor(getResources().getColor(R.color.black));
@@ -423,14 +423,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //paint.setTextSize(35f);
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.orange));
-                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
+                w = getPixel(296f);
 //                w = 246;
                 break;
             case 1:
                 //paint.setTextSize(90f);
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                 fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
-                w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
+                w = getPixel(104f);
 //                w = 84;
                 break;
         }
@@ -468,14 +468,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.orange));
 //                    w = 246;
-                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
+                    w = getPixel(296f);
                     break;
                 case 1:
                     //paint.setTextSize(90f);
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
 //                    w = 84;
-                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
+                    w = getPixel(104f);
                     break;
             }
             paint.setColor(getResources().getColor(R.color.black));
@@ -511,14 +511,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (40f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.orange));
 //                    w = 246;
-                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
+                    w = getPixel(296f);
                     break;
                 case 1:
                     //paint.setTextSize(90f);
                     paint.setTextSize(Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (70f/3.5f),getResources().getDisplayMetrics())));
                     fillPaint.setColor(getResources().getColor(R.color.darkLightOrange));
 //                    w = 84;
-                    w = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
+                    w = getPixel(104f);
                     break;
             }
             paint.setColor(getResources().getColor(R.color.lightBlue));
@@ -541,7 +541,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Digunakan untuk mengisi nilai array coordinatX saja
      */
     private int posisiX(int indeks) {
-        int currX = 150;
+        float total = (5 * (getPixel(296f) + getPixel(10f))) + (4 * (getPixel(104f) + getPixel(10f)));
+
+//        int currX = (int)getPixel(80f);
+        int currX = (int)(WIDTH-total) / 2 ;
         if (indeks == 0) {
             return currX;
         } else {
@@ -549,12 +552,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //operand
                 if (i % 2 == 0) {
 //                    currX += OPERAND_WIDTH + 10;
-                    currX += Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics())) + Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (10/3.5f),getResources().getDisplayMetrics()));
+                    currX += getPixel(296f) + getPixel(10f);
                 }
                 //operator
                 else {
 //                    currX += OPERATOR_WIDTH + 10;
-                    currX += Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics())) + Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (10/3.5f),getResources().getDisplayMetrics()));
+                    currX += getPixel(104f) + getPixel(10f);
                 }
             }
         }
@@ -773,6 +776,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
             return false;
-        }
+        }        
+    }
+
+    public float getPixel(float size){
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (size/3.5f),getResources().getDisplayMetrics()));
     }
 }
