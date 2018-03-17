@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
     public static int longClicked = 0;
     public static Node currentN;
-    private final int OPERAND_WIDTH = 246;
-    private final int OPERATOR_WIDTH = 84;
+//    private final int OPERAND_WIDTH = 246;
+//    private final int OPERATOR_WIDTH = 84;
     private static MainActivity instances;
 
     private ImageButton bAddOperator, bAddOperand, bCalculate;
@@ -572,15 +572,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(getResources().getColor(R.color.darkLightOrange));
         for (int i = 0; i < coordinatX.length; i++) {
-            float y = 100;
+            float y = getPixel(100f);
             float x = coordinatX[i];
-            float height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (100/3.5f),getResources().getDisplayMetrics()));
+            float height = getPixel(100f);
             Log.d("HEIGHT",""+height);
             float width;
             if (i % 2 == 0) {
-                width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics()));
+                width = getPixel(296f);
             } else {
-                width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics()));
+                width = getPixel(104f);
             }
             RectF nRect = new RectF(x, y, x + width, y + height);
             mCanvas.drawRoundRect(nRect, 30, 30, paint);
@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setPosition(Node n) {
         int idx = getIdxTerdekat(n);
         n.setX(coordinatX[idx]);
-        n.setY(100);
+        n.setY(getPixel(100f));
     }
 
     private class CGTResult implements GestureDetector.OnGestureListener {
