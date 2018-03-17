@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
     public static int HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
     public static int longClicked = 0;
+    public static float scale = 0.0f;
     public static Node currentN;
     private final int OPERAND_WIDTH = 246;
     private final int OPERATOR_WIDTH = 84;
@@ -117,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             coordinatX[i] = posisiX(i);
         }
         this.mGestureDetector = new GestureDetector(this, new CGTResult());
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        scale = metrics.densityDpi/160f;
+//        Log.d("DENSITY",""+scale);
     }
 
     /**
@@ -218,8 +224,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if(contains(currentN)){
                                     removeFromList(currentN);
                                 }
+                                break;
                             }
                         }
+                    }
+                    if(currentN != null){
+                        nodes.remove(currentN);
+                        nodes.add(currentN);
                     }
 //                Log.d("ONTOUCH", "DOWN " + (currentN != null));
                     break;
@@ -499,7 +510,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fillPaint.setStyle(Paint.Style.FILL);
             strokePaint.setStyle(Paint.Style.STROKE);
             strokePaint.setStrokeWidth(10f);
-            RectF nRect = new RectF(currX - (w / 2), currY - h, currX + (w / 2), currY);
+            RectF nRect = new RectF(currX - (w / 2)-10, currY - h-10, currX + (w / 2)+10, currY+10);
             mCanvas.drawRoundRect(nRect, 30, 30, fillPaint);
             mCanvas.drawRoundRect(nRect, 30, 30, strokePaint);
             mCanvas.drawText(n.text, currX - ((paint.measureText(n.text)) / 2), currY - (h / 2) + (paint.getTextSize() / 2), paint);
@@ -542,11 +553,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < coordinatX.length; i++) {
             float y = 100;
             float x = coordinatX[i];
-            float height = 100;
-            float width = 0;
+            float height=100;
+            float width;
             if (i % 2 == 0) {
+//                width = 70.285714f *scale;
                 width = 246;
             } else {
+//                width = 24f * scale;
                 width = 84;
             }
             RectF nRect = new RectF(x, y, x + width, y + height);

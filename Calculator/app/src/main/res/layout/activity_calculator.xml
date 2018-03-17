@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/trash_zone"
-        android:layout_width="300px"
-        android:layout_height="300px"
+        android:layout_width="@dimen/_85sdp"
+        android:layout_height="@dimen/_85sdp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/trash_zone" />
@@ -21,27 +21,27 @@
     <TextView
         android:id="@+id/topTv"
         android:layout_width="match_parent"
-        android:layout_height="250px"
+        android:layout_height="@dimen/_70sdp"
         android:background="@drawable/background_with_opacity"
         android:textAlignment="center"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/_1sdp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/drag_here"/>
 
     <Spinner
         android:id="@+id/sOperator"
-        android:layout_width="75dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/_75sdp"
+        android:layout_height="@dimen/_25sdp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/bCalculate"
-        android:layout_marginLeft="100px"
-        android:layout_marginRight="50px"
-        android:layout_marginBottom="50px"
+        android:layout_marginLeft="@dimen/_28sdp"
+        android:layout_marginRight="@dimen/_14sdp"
+        android:layout_marginBottom="@dimen/_14sdp"
         android:textAlignment="center"
         android:background="@drawable/border_umum"
         android:clickable="false"/>
@@ -57,24 +57,24 @@
 
     <ImageButton
         android:id="@+id/bAddOperator"
-        android:layout_width="125px"
-        android:layout_height="125px"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/sOperator"
-        android:layout_marginBottom="50px"
+        android:layout_marginBottom="@dimen/_14sdp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/add_selector"/>
 
     <EditText
         android:id="@+id/etOperand"
-        android:layout_width="400px"
-        android:layout_height="100px"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_25sdp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/bAddOperand"
-        android:layout_marginLeft="100px"
-        android:layout_marginRight="50px"
-        android:layout_marginBottom="50px"
+        android:layout_marginLeft="@dimen/_28sdp"
+        android:layout_marginRight="@dimen/_14sdp"
+        android:layout_marginBottom="@dimen/_14sdp"
         android:textAlignment="center"
         android:hint="angka"
         android:inputType="number"
@@ -85,20 +85,20 @@
 
     <ImageButton
         android:id="@+id/bAddOperand"
-        android:layout_width="125px"
-        android:layout_height="125px"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/trash_zone"
-        android:layout_marginBottom="50px"
-        android:layout_marginRight="100px"
+        android:layout_marginBottom="@dimen/_14sdp"
+        android:layout_marginRight="@dimen/_28sdp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/add_selector"/>
 
     <ImageButton
         android:id="@+id/bCalculate"
-        android:layout_width="300px"
-        android:layout_height="300px"
+        android:layout_width="@dimen/_85sdp"
+        android:layout_height="@dimen/_85sdp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@null"
@@ -109,8 +109,8 @@
         android:id="@+id/cbPrecedence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
-        android:padding="5dp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:padding="@dimen/_5sdp"
         android:layout_below="@id/topTv"
         android:background="@drawable/border_umum"
         android:text="Precedence"/>
@@ -121,27 +121,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/topTv"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_15sdp"
         android:orientation="vertical"
         android:background="@drawable/border_umum"
-        android:padding="10dp">
+        android:padding="@dimen/_10sdp">
         <TextView
             android:id="@+id/tvResultText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="40px"
+            android:textSize="@dimen/_11sdp"
             android:text="Result"/>
 
         <com.example.android.calculator.CustomTextView
             android:id="@+id/tvResult"
             android:layout_below="@id/tvResultText"
             android:layout_alignParentRight="true"
-            android:padding="5dp"
-            android:layout_marginRight="10dp"
+            android:padding="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_10sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="100px"
+            android:textSize="@dimen/_28sdp"
             android:background="@drawable/border_umum"
             android:text="n/a"/>
     </LinearLayout>
