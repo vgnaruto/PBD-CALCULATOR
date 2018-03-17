@@ -548,11 +548,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int i = 0; i < indeks; i++) {
                 //operand
                 if (i % 2 == 0) {
-                    currX += OPERAND_WIDTH + 10;
+//                    currX += OPERAND_WIDTH + 10;
+                    currX += Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (296/3.5f),getResources().getDisplayMetrics())) + Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (10/3.5f),getResources().getDisplayMetrics()));
                 }
                 //operator
                 else {
-                    currX += OPERATOR_WIDTH + 10;
+//                    currX += OPERATOR_WIDTH + 10;
+                    currX += Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (104/3.5f),getResources().getDisplayMetrics())) + Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (10/3.5f),getResources().getDisplayMetrics()));
                 }
             }
         }
