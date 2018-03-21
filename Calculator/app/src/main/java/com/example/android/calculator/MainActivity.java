@@ -8,13 +8,11 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     toast.show();
                 }
             } else {
-                if (Calculator.getAnswer(llList)) {
+                if (Calculator.calculate(llList)) {
                     resetCanvas();
 //                    draw((int) Double.parseDouble("" + Calculator.result) + "", 0);
                     tvResult.setText(Calculator.resultString);

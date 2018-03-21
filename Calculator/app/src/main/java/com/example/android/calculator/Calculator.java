@@ -5,8 +5,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import javax.xml.xpath.XPathExpression;
-
 /**
  * Kelas ini yang akan mengatur operasi matematika
  * Operasi dasar : +,-,*,/
@@ -17,7 +15,7 @@ public class Calculator {
     public static String resultString = "";
     public static double result = 0;
 
-    public static double calculate(String operand1, String operand2, String operator) {
+    public static double hitung(String operand1, String operand2, String operator) {
         double op1 = Double.parseDouble(operand1);
         double op2 = Double.parseDouble(operand2);
         double result = 0;
@@ -42,7 +40,10 @@ public class Calculator {
         return result;
     }
 
-    public static boolean getAnswer(LinkedList<Node> ll) {
+    /**
+     * untuk perhitungan tanpa precedence
+     * */
+    public static boolean calculate(LinkedList<Node> ll) {
         result = 0;
         int jumlahOperator = 0;
         int jumlahOperand = 0;
@@ -61,10 +62,10 @@ public class Calculator {
                         op1 = n.getText();
                     } else {
                         op2 = n.getText();
-                        op1 = "" + Calculator.calculate(op1, op2, ot);
+                        op1 = "" + Calculator.hitung(op1, op2, ot);
                         if(op2.equalsIgnoreCase("0") && ot.equalsIgnoreCase("/")){
                             resultString = "n/a";
-                            return true;
+                            return false;
                         }
                         result = Double.parseDouble(op1);
                         resultString = (int)result+"";
@@ -101,6 +102,9 @@ public class Calculator {
         return result;
     }
 
+    /**
+     * untuh perhitungan dengan precedence
+     * */
     public static boolean calculate(String token) {
         if (isValid(token)) {
             String[] tokens = token.split("\\+|-");
@@ -115,14 +119,17 @@ public class Calculator {
                     operasi.add("" + result);
                 } else if (tokens[i].contains("/")) {
                     String[] tempToken = tokens[i].split("/");
-                    double result = Double.parseDouble(tempToken[0]) / Double.parseDouble(tempToken[1]);
-                    if(tempToken[2].equalsIgnoreCase("0")){
+                    Log.d("CALCULATE",tempToken[1]+" "+tempToken[0]);
+                    if((tempToken[1].trim()).equalsIgnoreCase("0")){
+                        Log.d("CALCULATE","MASUK");
                         Calculator.resultString = "n/a";
-                        return true;
+                        return false;
+                    }else {
+                        double result = Double.parseDouble(tempToken[0]) / Double.parseDouble(tempToken[1]);
+                        Calculator.result = result;
+                        Calculator.resultString = (int)result+"";
+                        operasi.add("" + result);
                     }
-                    Calculator.result = result;
-                    Calculator.resultString = (int)result+"";
-                    operasi.add("" + result);
 //                    Log.d("CALCULATE", result + " /");
                 } else {
                     operasi.add(tokens[i]);
@@ -154,9 +161,9 @@ public class Calculator {
                     od1 = "" + result;
                 }
             }
-            for (String top : operasi) {
-                Log.d("CALCULATE", "top: " + top);
-            }
+//            for (String top : operasi) {
+//                Log.d("CALCULATE", "top: " + top);
+//            }
             return true;
         } else {
             return false;
